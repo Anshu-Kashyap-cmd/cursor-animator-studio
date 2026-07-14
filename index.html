@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/logo.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#E8793A" />
+    <title>Cursor Animator Studio | Professional Windows .ANI Builder</title>
+    <script>
+      // Prevent "Cannot set property fetch of #<Window> which has only a getter" errors in iframe environments
+      (function() {
+        try {
+          var target = typeof globalThis !== 'undefined' ? globalThis : window;
+          if (target && target.fetch) {
+            var originalFetch = target.fetch;
+            var currentFetch = originalFetch;
+            Object.defineProperty(target, 'fetch', {
+              get: function() { return currentFetch; },
+              set: function(v) { currentFetch = v; },
+              configurable: true,
+              enumerable: true
+            });
+          }
+        } catch (e) {
+          console.warn('Unable to patch fetch getter/setter:', e);
+        }
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then(reg => console.log('ServiceWorker registered with scope:', reg.scope))
+            .catch(err => console.error('ServiceWorker registration failed:', err));
+        });
+      }
+    </script>
+  </body>
+</html>
+

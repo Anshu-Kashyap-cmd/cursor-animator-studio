@@ -1,0 +1,6 @@
+{
+  "name": "Cursor Animator Studio",
+  "description": "A professional .CUR to .ANI converter and frame animation builder with live preview, timeline editing, custom effects, and Firebase sync.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
