@@ -152,7 +152,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSelectProject, onN
           </button>
           <div className="w-px h-6 bg-white/10"></div>
           <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#E8793A]/20 via-[#1C1512] to-[#6E5A7B]/20 flex items-center justify-center border border-[#E8793A]/30 overflow-hidden">
-            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src="logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           </div>
           <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-[#B8ADA3] bg-clip-text text-transparent">
             My Cursors Dashboard

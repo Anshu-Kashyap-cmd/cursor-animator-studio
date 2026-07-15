@@ -58,7 +58,7 @@ export const Landing: React.FC<LandingProps> = ({
       <header className="max-w-6xl mx-auto w-full flex items-center justify-between mb-8">
         <div className="flex items-center space-x-2.5">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E8793A]/20 via-[#1C1512] to-[#6E5A7B]/20 flex items-center justify-center shadow-lg shadow-[#E8793A]/10 border border-[#E8793A]/30 overflow-hidden">
-            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src="logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-[#F3EDE7] to-[#B8ADA3] bg-clip-text text-transparent">
             Cursor Animator Studio

@@ -1,15 +1,15 @@
 const CACHE_NAME = 'cursor-animator-studio-v1';
 const ASSETS_TO_CACHE = [
-  '/',
-  '/index.html',
-  '/logo.png',
-  '/icon-144.png',
-  '/icon-192.png',
-  '/icon-384.png',
-  '/icon-512.png',
-  '/desktop_screenshot.png',
-  '/mobile_screenshot.png',
-  '/manifest.json'
+  './',
+  'index.html',
+  'logo.png',
+  'icon-144.png',
+  'icon-192.png',
+  'icon-384.png',
+  'icon-512.png',
+  'desktop_screenshot.png',
+  'mobile_screenshot.png',
+  'manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
