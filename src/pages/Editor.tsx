@@ -8,8 +8,11 @@ import { EffectGallery } from "../components/EffectGallery.tsx";
 import { ExportModal } from "../components/ExportModal.tsx";
 import { GeminiAssistant } from "../components/GeminiAssistant.tsx";
 import { ColorPaletteManager } from "../components/ColorPaletteManager.tsx";
+import { CursorMagicEffects } from "../components/CursorMagicEffects.tsx";
+import { MobileTouchSimulator } from "../components/MobileTouchSimulator.tsx";
 import { EasingEditor } from "../components/EasingEditor.tsx";
 import { AutoTweenTool } from "../components/AutoTweenTool.tsx";
+import { AdvancedToolsStudio } from "../components/AdvancedToolsStudio.tsx";
 import { ProjectData, ProjectFrame, ExportHistoryEntry } from "../types.ts";
 import { saveProjectToDb, saveExportHistory } from "../db/projects.ts";
 import { generateEffectFrames, EffectPreset } from "../engine/effects/index.ts";
@@ -92,6 +95,7 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
   const [isSaving, setIsSaving] = useState(false);
   const [selectedColor, setSelectedColor] = useState<string>(initialProject.palette?.[0] || "#E8793A");
   const [isApplyingTint, setIsApplyingTint] = useState(false);
+  const [rightPanelTab, setRightPanelTab] = useState<"auto" | "manual" | "advanced">((initialProject.mode as any) || "auto");
 
   // View settings states
   const [onionSkinPrev, setOnionSkinPrev] = useState<boolean>(false);
@@ -945,9 +949,9 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
       </nav>
 
       {/* Main Workspace split */}
-      <div className="flex-1 grid grid-cols-1 lg:grid-cols-4 gap-6 p-6 items-start">
+      <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-6 p-4 sm:p-6 items-start">
         {/* Left Side: Parameters / Tools Inspector */}
-        <div className="lg:col-span-1 flex flex-col space-y-6">
+        <div className="md:col-span-6 lg:col-span-3 flex flex-col space-y-6 order-2 lg:order-1">
           <Inspector
             activeFrame={activeFrame}
             onFrameUpdated={handleFrameUpdated}
@@ -973,10 +977,25 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
             onApplyTintToAllFrames={handleApplyTint}
             isApplyingTint={isApplyingTint}
           />
+
+          <CursorMagicEffects
+            activeFrame={activeFrame}
+            onFrameUpdated={handleFrameUpdated}
+            onFramesUpdated={updateFramesAndHistory}
+            allFrames={project.frames}
+            selectedColor={selectedColor}
+            showToast={showToast}
+          />
+
+          <MobileTouchSimulator
+            activeFrame={activeFrame}
+            onFrameUpdated={handleFrameUpdated}
+            showToast={showToast}
+          />
         </div>
 
         {/* Center: Live interactive canvas with timeline */}
-        <div className="lg:col-span-2 flex flex-col space-y-6">
+        <div className="md:col-span-12 lg:col-span-6 flex flex-col space-y-6 order-1 lg:order-2">
           <PreviewCanvas
             frames={project.frames}
             activeFrameIndex={activeFrameIndex}
@@ -1018,39 +1037,54 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
         </div>
 
         {/* Right Side: Mode Switcher + Feature Panel */}
-        <div className="lg:col-span-1 flex flex-col space-y-6">
+        <div className="md:col-span-6 lg:col-span-3 flex flex-col space-y-6 order-3">
           
           {/* Project Mode Quick Segment Select Tab */}
           <div className="p-1 rounded-xl bg-[#1C1512]/90 border border-white/5 flex items-center w-full">
             <button
               onClick={() => {
                 setProject((p) => ({ ...p, mode: "auto" }));
+                setRightPanelTab("auto");
                 showToast("Switched to Auto-Animate Mode.");
               }}
-              className={`flex-1 py-2 text-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                project.mode === "auto"
+              className={`flex-1 py-2 text-center rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                rightPanelTab === "auto"
                   ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/10"
                   : "text-[#B8ADA3] hover:text-[#F3EDE7] hover:bg-white/[0.03]"
               }`}
             >
-              Auto-Animate Presets
+              Auto-Animate
             </button>
             <button
               onClick={() => {
                 setProject((p) => ({ ...p, mode: "manual" }));
-                showToast("Switched to Manual Frame Assembly Mode.");
+                setRightPanelTab("manual");
+                showToast("Switched to Manual Frame Assembly.");
               }}
-              className={`flex-1 py-2 text-center rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                project.mode === "manual"
+              className={`flex-1 py-2 text-center rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                rightPanelTab === "manual"
                   ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/10"
                   : "text-[#B8ADA3] hover:text-[#F3EDE7] hover:bg-white/[0.03]"
               }`}
             >
-              Manual Frames
+              Manual
+            </button>
+            <button
+              onClick={() => {
+                setRightPanelTab("advanced");
+                showToast("Switched to Advanced Studio Tools.");
+              }}
+              className={`flex-1 py-2 text-center rounded-lg text-[10px] font-bold transition-all cursor-pointer ${
+                rightPanelTab === "advanced"
+                  ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/10"
+                  : "text-[#B8ADA3] hover:text-[#F3EDE7] hover:bg-white/[0.03]"
+              }`}
+            >
+              Advanced Studio
             </button>
           </div>
 
-          {project.mode === "auto" ? (
+          {rightPanelTab === "auto" ? (
             <>
               <EffectGallery
                 selectedPreset={selectedPreset}
@@ -1067,7 +1101,7 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
                 onEasingSelected={setSelectedEasing}
               />
             </>
-          ) : (
+          ) : rightPanelTab === "manual" ? (
             <div className="space-y-4">
               <div className="p-4 rounded-xl bg-[#6E5A7B]/10 border border-[#6E5A7B]/20 text-xs">
                 <h4 className="font-bold text-[#E8793A] mb-1 uppercase tracking-wider">Manual Frame Assembly</h4>
@@ -1083,6 +1117,15 @@ export const Editor: React.FC<EditorProps> = ({ user, initialProject, onNavigate
               />
               <GeminiAssistant />
             </div>
+          ) : (
+            <AdvancedToolsStudio
+              project={project}
+              activeFrame={activeFrame}
+              onFrameUpdated={handleFrameUpdated}
+              onFramesUpdated={updateFramesAndHistory}
+              showToast={showToast}
+              selectedColor={selectedColor}
+            />
           )}
         </div>
       </div>

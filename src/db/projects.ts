@@ -1,10 +1,57 @@
 import { get, set, keys, del } from "idb-keyval";
-import { db } from "./firebase.ts";
-import { doc, setDoc, getDoc, collection, getDocs, query, where, deleteDoc, orderBy } from "firebase/firestore";
+import { db, auth } from "./firebase.ts";
+import { doc, setDoc, getDoc, collection, getDocs, query, where, deleteDoc } from "firebase/firestore";
 import { ProjectData, ExportHistoryEntry } from "../types.ts";
 
 const IDB_PREFIX = "cas_project_";
 const EXPORT_HISTORY_IDB_KEY = "cas_export_history";
+
+export enum OperationType {
+  CREATE = 'create',
+  UPDATE = 'update',
+  DELETE = 'delete',
+  LIST = 'list',
+  GET = 'get',
+  WRITE = 'write',
+}
+
+export interface FirestoreErrorInfo {
+  error: string;
+  operationType: OperationType;
+  path: string | null;
+  authInfo: {
+    userId?: string | null;
+    email?: string | null;
+    emailVerified?: boolean | null;
+    isAnonymous?: boolean | null;
+    tenantId?: string | null;
+    providerInfo?: {
+      providerId?: string | null;
+      email?: string | null;
+    }[];
+  }
+}
+
+export function handleFirestoreError(error: unknown, operationType: OperationType, path: string | null) {
+  const errInfo: FirestoreErrorInfo = {
+    error: error instanceof Error ? error.message : String(error),
+    authInfo: {
+      userId: auth.currentUser?.uid,
+      email: auth.currentUser?.email,
+      emailVerified: auth.currentUser?.emailVerified,
+      isAnonymous: auth.currentUser?.isAnonymous,
+      tenantId: auth.currentUser?.tenantId,
+      providerInfo: auth.currentUser?.providerData?.map(provider => ({
+        providerId: provider.providerId,
+        email: provider.email,
+      })) || []
+    },
+    operationType,
+    path
+  };
+  console.error('Firestore Error: ', JSON.stringify(errInfo));
+  throw new Error(JSON.stringify(errInfo));
+}
 
 /**
  * Saves a project to Firestore (if signed in) or IndexedDB (if anonymous).
@@ -16,15 +63,21 @@ export async function saveProjectToDb(project: ProjectData, userId?: string | nu
     updated_at: new Date().toISOString(),
   };
 
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = `projects/${project.id}`;
     // Save to Firebase Firestore
     try {
       const docRef = doc(db, "projects", project.id);
       await setDoc(docRef, updatedProject);
     } catch (error) {
       console.error("Failed to save project to Firestore:", error);
-      // Fallback: Save to IndexedDB if firestore fails
-      await set(`${IDB_PREFIX}${project.id}`, updatedProject);
+      // Try to report structured error first, or fallback to IndexedDB
+      try {
+        handleFirestoreError(error, OperationType.WRITE, path);
+      } catch (e) {
+        await set(`${IDB_PREFIX}${project.id}`, updatedProject);
+        throw e;
+      }
     }
   } else {
     // Save to IndexedDB
@@ -36,7 +89,8 @@ export async function saveProjectToDb(project: ProjectData, userId?: string | nu
  * Loads all projects for a user. If not signed in, loads all IndexedDB projects.
  */
 export async function loadProjectsFromDb(userId?: string | null): Promise<ProjectData[]> {
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = "projects";
     try {
       const q = query(
         collection(db, "projects"),
@@ -53,6 +107,7 @@ export async function loadProjectsFromDb(userId?: string | null): Promise<Projec
       );
     } catch (error) {
       console.error("Failed to load projects from Firestore:", error);
+      handleFirestoreError(error, OperationType.LIST, path);
     }
   }
 
@@ -77,7 +132,8 @@ export async function loadProjectsFromDb(userId?: string | null): Promise<Projec
  * Fetches a single project by ID.
  */
 export async function loadProjectById(projectId: string, userId?: string | null): Promise<ProjectData | null> {
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = `projects/${projectId}`;
     try {
       const docRef = doc(db, "projects", projectId);
       const docSnap = await getDoc(docRef);
@@ -86,6 +142,7 @@ export async function loadProjectById(projectId: string, userId?: string | null)
       }
     } catch (error) {
       console.error("Failed to fetch project from Firestore:", error);
+      handleFirestoreError(error, OperationType.GET, path);
     }
   }
 
@@ -98,12 +155,14 @@ export async function loadProjectById(projectId: string, userId?: string | null)
  * Deletes a project by ID from Firestore and/or IndexedDB.
  */
 export async function deleteProjectFromDb(projectId: string, userId?: string | null): Promise<void> {
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = `projects/${projectId}`;
     try {
       const docRef = doc(db, "projects", projectId);
       await deleteDoc(docRef);
     } catch (error) {
       console.error("Failed to delete project from Firestore:", error);
+      handleFirestoreError(error, OperationType.DELETE, path);
     }
   }
   
@@ -119,13 +178,15 @@ export async function saveExportHistory(entry: ExportHistoryEntry, userId?: stri
     user_id: userId || null,
   };
 
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = `export_history/${entry.id}`;
     try {
       const docRef = doc(db, "export_history", entry.id);
       await setDoc(docRef, finalEntry);
       return;
     } catch (error) {
       console.error("Failed to save export history to Firestore:", error);
+      handleFirestoreError(error, OperationType.WRITE, path);
     }
   }
 
@@ -139,7 +200,8 @@ export async function saveExportHistory(entry: ExportHistoryEntry, userId?: stri
  * Loads export history for a user (or local).
  */
 export async function loadExportHistory(userId?: string | null): Promise<ExportHistoryEntry[]> {
-  if (userId) {
+  if (userId && !userId.startsWith("guest_")) {
+    const path = "export_history";
     try {
       const q = query(
         collection(db, "export_history"),
@@ -155,6 +217,7 @@ export async function loadExportHistory(userId?: string | null): Promise<ExportH
       );
     } catch (error) {
       console.error("Failed to load export history from Firestore:", error);
+      handleFirestoreError(error, OperationType.LIST, path);
     }
   }
 

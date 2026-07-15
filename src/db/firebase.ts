@@ -27,10 +27,11 @@ googleProvider.setCustomParameters({ prompt: "select_account" });
  * Triggers Google Sign-In Popup via Firebase
  */
 export async function signInWithGoogle() {
+  const result = await signInWithPopup(auth, googleProvider);
+  const user = result.user;
+  const userPath = `users/${user.uid}`;
+  
   try {
-    const result = await signInWithPopup(auth, googleProvider);
-    const user = result.user;
-    
     // Create/update user document in Firestore
     const userRef = doc(db, "users", user.uid);
     await setDoc(userRef, {
@@ -41,9 +42,26 @@ export async function signInWithGoogle() {
     }, { merge: true });
 
     return user;
-  } catch (error) {
-    console.error("Google sign-in error:", error);
-    throw error;
+  } catch (error: any) {
+    console.error("Google sign-in user registration error:", error);
+    const errInfo = {
+      error: error instanceof Error ? error.message : String(error),
+      authInfo: {
+        userId: user.uid,
+        email: user.email,
+        emailVerified: user.emailVerified,
+        isAnonymous: user.isAnonymous,
+        tenantId: user.tenantId,
+        providerInfo: user.providerData?.map(provider => ({
+          providerId: provider.providerId,
+          email: provider.email,
+        })) || []
+      },
+      operationType: "write",
+      path: userPath
+    };
+    console.error('Firestore Error: ', JSON.stringify(errInfo));
+    throw new Error(JSON.stringify(errInfo));
   }
 }
 

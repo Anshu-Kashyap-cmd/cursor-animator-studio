@@ -1,0 +1,88 @@
+{
+  "entities": {
+    "ProjectFrame": {
+      "title": "ProjectFrame",
+      "description": "A single frame of a cursor project.",
+      "type": "object",
+      "properties": {
+        "frame_index": { "type": "integer" },
+        "duration_ms": { "type": "integer" },
+        "width": { "type": "integer" },
+        "height": { "type": "integer" },
+        "hotspot_x": { "type": "integer" },
+        "hotspot_y": { "type": "integer" },
+        "image_data": { "type": "string" }
+      },
+      "required": ["frame_index", "duration_ms", "width", "height", "hotspot_x", "hotspot_y", "image_data"]
+    },
+    "ProjectData": {
+      "title": "ProjectData",
+      "description": "A full cursor project definition.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "user_id": { "type": "string" },
+        "name": { "type": "string", "maxLength": 100 },
+        "mode": { "type": "string", "enum": ["auto", "manual"] },
+        "frame_count": { "type": "integer" },
+        "total_duration_ms": { "type": "integer" },
+        "effect_preset": { "type": "string" },
+        "easing": { "type": "string" },
+        "hotspot_x": { "type": "integer" },
+        "hotspot_y": { "type": "integer" },
+        "created_at": { "type": "string" },
+        "updated_at": { "type": "string" },
+        "frames": {
+          "type": "array"
+        },
+        "palette": {
+          "type": "array"
+        }
+      },
+      "required": ["id", "user_id", "name", "mode", "frame_count", "total_duration_ms", "easing", "hotspot_x", "hotspot_y", "created_at", "updated_at", "frames"]
+    },
+    "ExportHistoryEntry": {
+      "title": "ExportHistoryEntry",
+      "description": "A record of an exported cursor.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "pattern": "^[a-zA-Z0-9_\\-]+$" },
+        "project_id": { "type": "string" },
+        "project_name": { "type": "string" },
+        "user_id": { "type": "string" },
+        "exported_format": { "type": "string", "enum": ["ani", "cur", "gif", "zip"] },
+        "file_size_bytes": { "type": "integer" },
+        "total_duration_ms": { "type": "integer" },
+        "exported_at": { "type": "string" },
+        "image_data": { "type": "string" }
+      },
+      "required": ["id", "project_id", "project_name", "user_id", "exported_format", "file_size_bytes", "total_duration_ms", "exported_at", "image_data"]
+    },
+    "UserData": {
+      "title": "UserData",
+      "description": "User profile information with secure PII details.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string" },
+        "display_name": { "type": "string" },
+        "updated_at": { "type": "string" }
+      },
+      "required": ["id", "email", "display_name", "updated_at"]
+    }
+  },
+  "firestore": {
+    "projects/{projectId}": {
+      "schema": "ProjectData",
+      "description": "User created projects"
+    },
+    "export_history/{historyId}": {
+      "schema": "ExportHistoryEntry",
+      "description": "User cursor export history"
+    },
+    "users/{userId}": {
+      "schema": "UserData",
+      "description": "User account registrations"
+    }
+  }
+}

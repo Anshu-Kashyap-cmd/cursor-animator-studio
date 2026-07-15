@@ -54,7 +54,21 @@ export type EffectPreset =
   | "magicSpell"
   | "crystalShards"
   | "auroraBorealis"
-  | "steampunkGear";
+  | "steampunkGear"
+  | "kunaiTrail"
+  | "narutoRasengan"
+  | "gokuSuperSaiyanBlue"
+  | "ghostInTheShell"
+  | "phoenixRise"
+  | "cosmicNebulaEye"
+  | "glitchRave"
+  | "luffyGearFifth"
+  | "zenGarden"
+  | "demonSlayerSlash"
+  | "sonicBoom"
+  | "pixelRain"
+  | "magicRunicCircle"
+  | "laserSaber";
 
 export interface EffectGeneratorConfig {
   frameCount: number;
@@ -1771,6 +1785,629 @@ export function generateEffectFrames(
         ctx.restore();
 
         ctx.drawImage(sourceCanvas, 0, 0);
+        break;
+      }
+
+      case "kunaiTrail": {
+        // Draw the custom high-quality anime Ninja Kunai dagger pointing to the hotspot (top-left)
+        ctx.save();
+        
+        // Green energy trailing particles flowing behind the Kunai (flowing from bottom-right)
+        ctx.save();
+        ctx.shadowColor = "#22C55E"; // Tailwind green-500
+        ctx.shadowBlur = 8;
+        
+        const trailCount = 10;
+        for (let j = 0; j < trailCount; j++) {
+          // Trail particles move further bottom-right as progress index goes up
+          const trailProgress = (t + j / trailCount) % 1.0;
+          const fade = 1.0 - trailProgress;
+          
+          // Calculate diagonal displacement
+          const angleOffset = Math.PI / 4; // 45 degrees towards bottom-right
+          const distance = 4 + trailProgress * (width * 0.75);
+          
+          // Add some wavy sine movement
+          const wave = Math.sin(trailProgress * Math.PI * 4 + t * Math.PI * 2) * 4;
+          
+          const px = sourceHotspotX + Math.cos(angleOffset) * distance + Math.sin(angleOffset + Math.PI / 2) * wave;
+          const py = sourceHotspotY + Math.sin(angleOffset) * distance + Math.cos(angleOffset + Math.PI / 2) * wave;
+          
+          const size = fade * 4.5 + 0.5;
+          ctx.fillStyle = j % 2 === 0 ? "rgba(34, 197, 94, " + fade * 0.8 + ")" : "rgba(187, 247, 208, " + fade * 0.9 + ")";
+          
+          ctx.beginPath();
+          ctx.arc(px, py, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // Now draw the Kunai itself over the hotspot
+        ctx.translate(sourceHotspotX, sourceHotspotY);
+        // Rotate 45 degrees so drawing straight down aligns the Kunai to point perfectly to the top-left (tip is at 0,0)
+        ctx.rotate(Math.PI / 4);
+        
+        // 1. Draw the blade (Diamond-like shaped dagger)
+        // Left side of blade (charcoal)
+        ctx.fillStyle = "#1E293B";
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(-5, 14);
+        ctx.lineTo(0, 20);
+        ctx.closePath();
+        ctx.fill();
+
+        // Right side of blade (bright silver)
+        ctx.fillStyle = "#94A3B8";
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(5, 14);
+        ctx.lineTo(0, 20);
+        ctx.closePath();
+        ctx.fill();
+        
+        // Blade center sharp edge ridge
+        ctx.strokeStyle = "#F1F5F9";
+        ctx.lineWidth = 0.5;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(0, 20);
+        ctx.stroke();
+
+        // 2. Handle / Grip wrapped in white ninja cloth
+        ctx.fillStyle = "#E2E8F0";
+        ctx.fillRect(-1.5, 20, 3, 10);
+        
+        // Draw cross wrap lines on handle
+        ctx.strokeStyle = "#475569";
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(-1.5, 23); ctx.lineTo(1.5, 25);
+        ctx.moveTo(-1.5, 27); ctx.lineTo(1.5, 29);
+        ctx.stroke();
+
+        // 3. Ring at the bottom end of the handle
+        ctx.strokeStyle = "#64748B";
+        ctx.lineWidth = 1.8;
+        ctx.beginPath();
+        ctx.arc(0, 32, 2.5, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Ring inner glow
+        ctx.fillStyle = "#334155";
+        ctx.beginPath();
+        ctx.arc(0, 32, 1, 0, Math.PI * 2);
+        ctx.fill();
+        
+        ctx.restore();
+        break;
+      }
+
+      case "narutoRasengan": {
+        // Draw the core cursor first so it remains readable
+        ctx.drawImage(sourceCanvas, 0, 0);
+
+        ctx.save();
+        ctx.globalCompositeOperation = "source-over"; // overlay nicely
+        
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // 1. Draw Rasengan base glowing aura spheres (dense swirling core)
+        const coreRadius = 12 + Math.sin(t * Math.PI * 4) * 2;
+        const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, coreRadius);
+        grad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+        grad.addColorStop(0.3, "rgba(56, 189, 248, 0.85)"); // Sky blue
+        grad.addColorStop(0.6, "rgba(14, 165, 233, 0.45)"); // Cyan blue
+        grad.addColorStop(1, "rgba(2, 132, 199, 0)");
+        
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(cx, cy, coreRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // 2. Swirling Rasengan Chakra Rings (trigonometric sine curves rotating smoothly)
+        ctx.save();
+        ctx.shadowColor = "#38BDF8";
+        ctx.shadowBlur = 6;
+        ctx.lineWidth = 1.0;
+        
+        const numSwirls = 4;
+        for (let s = 0; s < numSwirls; s++) {
+          const startAngle = (s * Math.PI * 2) / numSwirls + t * Math.PI * 3; // high speed rotation
+          ctx.strokeStyle = s % 2 === 0 ? "rgba(255, 255, 255, 0.8)" : "rgba(56, 189, 248, 0.85)";
+          
+          ctx.beginPath();
+          for (let step = 0; step <= 20; step++) {
+            const stepAngle = startAngle + (step * 0.15);
+            // Swirling in/out radius using sine waves
+            const dynamicRadius = 4 + (step * 0.5) + Math.sin(t * Math.PI * 6 + step * 0.5) * 2.5;
+            const px = cx + Math.cos(stepAngle) * dynamicRadius;
+            const py = cy + Math.sin(stepAngle) * dynamicRadius;
+            if (step === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+          }
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        // 3. Floating outer rotating chakra particles
+        const particleCount = 14;
+        ctx.save();
+        for (let p = 0; p < particleCount; p++) {
+          const particleSeed = seed + p * 37;
+          const r1 = seededRandom(particleSeed);
+          
+          // Rotation speed and orbit offset using sin/cos waves
+          const orbitAngle = t * Math.PI * 5 + p * (Math.PI * 2 / particleCount);
+          const orbitRadius = 10 + 6 * Math.sin(t * Math.PI * 3 + p * 1.5) * r1 * 3;
+          
+          const px = cx + Math.cos(orbitAngle) * orbitRadius;
+          const py = cy + Math.sin(orbitAngle) * orbitRadius;
+          
+          const pSize = (1.2 + Math.cos(t * Math.PI * 4 + p) * 0.6) * 1.5;
+          const opacity = 0.5 + 0.5 * Math.sin(t * Math.PI * 2 + p);
+          
+          ctx.fillStyle = p % 3 === 0 ? "#FFFFFF" : (p % 3 === 1 ? "#38BDF8" : "#0EA5E9");
+          ctx.shadowColor = "#38BDF8";
+          ctx.shadowBlur = 4;
+          ctx.globalAlpha = opacity;
+          
+          ctx.beginPath();
+          ctx.arc(px, py, pSize, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        ctx.restore();
+        break;
+      }
+
+      case "gokuSuperSaiyanBlue": {
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+        // Cyan and Indigo kinetic fire aura rising upwards
+        for (let j = 0; j < 12; j++) {
+          const auraSeed = seed + j * 19;
+          const r1 = seededRandom(auraSeed);
+          const r2 = seededRandom(auraSeed + 3);
+          
+          const prgY = (t + r1) % 1;
+          const auraX = sourceHotspotX + (r2 - 0.5) * width * 0.85;
+          const auraY = height - prgY * height - 2;
+          const size = (1 - prgY) * 8.5 + 1.5;
+
+          ctx.shadowColor = "#00F0FF";
+          ctx.shadowBlur = 8;
+          
+          // Triple gradient: White core, turquoise middle, blue outer
+          const auraGrad = ctx.createRadialGradient(auraX, auraY, 0, auraX, auraY, size);
+          auraGrad.addColorStop(0, "rgba(255, 255, 255, 0.95)");
+          auraGrad.addColorStop(0.3, "rgba(34, 211, 238, 0.8)"); // Cyan
+          auraGrad.addColorStop(0.7, "rgba(79, 70, 229, 0.45)"); // Indigo
+          auraGrad.addColorStop(1, "rgba(0,0,0,0)");
+          
+          ctx.fillStyle = auraGrad;
+          ctx.beginPath();
+          ctx.arc(auraX, auraY, size, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+
+        // Overlay small cracking electrical discharge lines
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+        ctx.strokeStyle = "#E0F2FE";
+        ctx.shadowColor = "#0284C7";
+        ctx.shadowBlur = 5;
+        ctx.lineWidth = 0.8;
+        if (t * 10 % 2 > 1) {
+          ctx.beginPath();
+          ctx.moveTo(sourceHotspotX - 8, sourceHotspotY + 4);
+          ctx.lineTo(sourceHotspotX - 3, sourceHotspotY - 6);
+          ctx.lineTo(sourceHotspotX + 2, sourceHotspotY - 2);
+          ctx.lineTo(sourceHotspotX + 7, sourceHotspotY - 10);
+          ctx.stroke();
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "ghostInTheShell": {
+        // Holographic displacement grid scan effect
+        const barY = Math.floor(t * height);
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+        
+        ctx.strokeStyle = "rgba(168, 85, 247, 0.85)"; // Purple
+        ctx.lineWidth = 1.2;
+        ctx.shadowColor = "#10B981"; // Emerald scanlines
+        ctx.shadowBlur = 6;
+        
+        // Scan line bar
+        ctx.beginPath();
+        ctx.moveTo(0, barY);
+        ctx.lineTo(width, barY);
+        ctx.stroke();
+
+        // Draw multiple horizontal cyber grid bars
+        ctx.fillStyle = "rgba(16, 185, 129, 0.15)";
+        ctx.fillRect(0, barY - 4, width, 1.5);
+        ctx.fillRect(0, barY + 4, width, 1.5);
+
+        // Displace center slice of original image
+        try {
+          const shift = Math.cos(t * Math.PI * 6) * 4;
+          if (barY > 6 && barY < height - 6) {
+            ctx.drawImage(sourceCanvas, 0, barY - 3, width, 6, shift, barY - 3, width, 6);
+          }
+        } catch (e) {}
+
+        // Small binary 0s and 1s green text
+        ctx.fillStyle = "#10B981";
+        ctx.font = "bold 5px monospace";
+        ctx.globalAlpha = 0.8;
+        ctx.fillText("01", 3, 10);
+        ctx.fillText("10", width - 10, height - 6);
+
+        ctx.restore();
+        break;
+      }
+
+      case "phoenixRise": {
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+
+        // Beautiful flapping flaming wings behind hotspot
+        const wingsAngle = Math.sin(t * Math.PI * 2) * 0.45; // flapping angle
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // Left Wing
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(-wingsAngle - Math.PI / 6);
+        const wingGrad1 = ctx.createLinearGradient(0, 0, -width * 0.6, -height * 0.4);
+        wingGrad1.addColorStop(0, "#FFFFFF");
+        wingGrad1.addColorStop(0.4, "#F59E0B"); // Gold
+        wingGrad1.addColorStop(0.8, "#EF4444"); // Red
+        wingGrad1.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = wingGrad1;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(-width * 0.4, -height * 0.5, -width * 0.65, -height * 0.25);
+        ctx.quadraticCurveTo(-width * 0.3, -height * 0.1, 0, 0);
+        ctx.fill();
+        ctx.restore();
+
+        // Right Wing
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(wingsAngle + Math.PI / 6);
+        const wingGrad2 = ctx.createLinearGradient(0, 0, width * 0.6, -height * 0.4);
+        wingGrad2.addColorStop(0, "#FFFFFF");
+        wingGrad2.addColorStop(0.4, "#F59E0B");
+        wingGrad2.addColorStop(0.8, "#EF4444");
+        wingGrad2.addColorStop(1, "rgba(0,0,0,0)");
+        ctx.fillStyle = wingGrad2;
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.quadraticCurveTo(width * 0.4, -height * 0.5, width * 0.65, -height * 0.25);
+        ctx.quadraticCurveTo(width * 0.3, -height * 0.1, 0, 0);
+        ctx.fill();
+        ctx.restore();
+
+        ctx.restore();
+        ctx.drawImage(sourceCanvas, 0, 0);
+        break;
+      }
+
+      case "cosmicNebulaEye": {
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+        
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+        
+        // Swirling galaxy orbital rings
+        const nebulaRadius = 14 + 4 * Math.sin(t * Math.PI * 2);
+        ctx.strokeStyle = "rgba(219, 39, 119, 0.4)"; // deep pink
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, nebulaRadius, nebulaRadius * 0.45, t * Math.PI * 2, 0, Math.PI * 2);
+        ctx.stroke();
+
+        ctx.strokeStyle = "rgba(79, 70, 229, 0.55)"; // Indigo
+        ctx.lineWidth = 1.0;
+        ctx.beginPath();
+        ctx.ellipse(cx, cy, nebulaRadius * 0.7, nebulaRadius * 0.3, -t * Math.PI * 2, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Sparkling background stars
+        ctx.fillStyle = "#FFFFFF";
+        for (let s = 0; s < 5; s++) {
+          const sT = (t + s * 0.2) % 1;
+          const sX = cx + Math.cos(sT * Math.PI * 2) * 12;
+          const sY = cy + Math.sin(sT * Math.PI * 2) * 12;
+          ctx.globalAlpha = 1.0 - sT;
+          ctx.beginPath();
+          ctx.arc(sX, sY, 1.2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "glitchRave": {
+        // High frequency cybernetic music bars displacement
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+
+        const barCount = 6;
+        const barW = Math.max(2, Math.floor(width / barCount));
+        ctx.shadowBlur = 4;
+        
+        for (let b = 0; b < barCount; b++) {
+          const amp = Math.abs(Math.sin(t * Math.PI * 5 + b * 2)) * height * 0.45;
+          const bX = b * barW;
+          
+          let col = "#22C55E"; // Green
+          if (b % 3 === 1) col = "#EC4899"; // Pink
+          else if (b % 3 === 2) col = "#06B6D4"; // Cyan
+
+          ctx.fillStyle = col;
+          ctx.shadowColor = col;
+          ctx.globalAlpha = 0.5 + 0.3 * Math.sin(t * Math.PI * 10);
+          ctx.fillRect(bX, height - amp, barW - 1, amp);
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "luffyGearFifth": {
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+
+        // White kinetic puffy cartoonish smoke loops orbiting
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+        const cloudCount = 5;
+        
+        ctx.fillStyle = "#FFFFFF";
+        ctx.strokeStyle = "#E2E8F0";
+        ctx.lineWidth = 1.2;
+        ctx.shadowColor = "#FBBF24"; // Gold/sun glow
+        ctx.shadowBlur = 6;
+
+        for (let j = 0; j < cloudCount; j++) {
+          const cT = (t + j / cloudCount) % 1;
+          const angle = cT * Math.PI * 2;
+          const radius = 9 + 4 * Math.sin(t * Math.PI * 4);
+          const px = cx + Math.cos(angle) * radius;
+          const py = cy + Math.sin(angle) * radius * 0.8;
+
+          ctx.beginPath();
+          // Draw a small puffy 3-bubble cartoon cloud
+          ctx.arc(px, py, 4, 0, Math.PI * 2);
+          ctx.arc(px - 2.5, py + 1, 2.5, 0, Math.PI * 2);
+          ctx.arc(px + 2.5, py + 1, 2.5, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.drawImage(sourceCanvas, 0, 0);
+        break;
+      }
+
+      case "zenGarden": {
+        // Drawing concentric sand ripples + floating bamboo/pink sakura leaves
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+        ctx.strokeStyle = "rgba(224, 242, 254, 0.25)";
+        ctx.lineWidth = 1.5;
+        
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // Ripples
+        for (let j = 0; j < 3; j++) {
+          const rippleT = (t + j * 0.33) % 1;
+          ctx.globalAlpha = 1.0 - rippleT;
+          ctx.beginPath();
+          ctx.arc(cx, cy, rippleT * width * 0.75, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+
+        ctx.drawImage(sourceCanvas, 0, 0);
+
+        // Floating leaves
+        ctx.save();
+        for (let j = 0; j < 3; j++) {
+          const leafT = (t + j * 0.33) % 1;
+          const lx = cx - 10 + Math.sin(leafT * Math.PI * 2 + j) * 8;
+          const ly = cy - 5 + leafT * (height * 0.7);
+          
+          ctx.fillStyle = j % 2 === 0 ? "#10B981" : "#F472B6"; // Green Tea vs Pink Sakura
+          ctx.globalAlpha = (1.0 - leafT) * 0.9;
+          
+          ctx.save();
+          ctx.translate(lx, ly);
+          ctx.rotate(leafT * Math.PI * 2);
+          ctx.beginPath();
+          ctx.ellipse(0, 0, 3, 1.3, 0, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "demonSlayerSlash": {
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+        
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // Water/Fire dual coiling dragon blade slashes in circular sweeps
+        ctx.lineWidth = 2.5;
+        ctx.lineCap = "round";
+        ctx.shadowBlur = 6;
+
+        // Water wave cyan splash
+        ctx.strokeStyle = "#38BDF8";
+        ctx.shadowColor = "#0284C7";
+        ctx.beginPath();
+        ctx.arc(cx, cy, 12, t * Math.PI * 2, t * Math.PI * 2 + Math.PI, false);
+        ctx.stroke();
+
+        // Fire trail orange splash
+        ctx.strokeStyle = "#F97316";
+        ctx.shadowColor = "#EA580C";
+        ctx.beginPath();
+        ctx.arc(cx, cy, 8, -t * Math.PI * 2, -t * Math.PI * 2 + Math.PI, false);
+        ctx.stroke();
+
+        ctx.restore();
+        break;
+      }
+
+      case "sonicBoom": {
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+        
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // Soundwave expanding cones
+        const coneRadius = t * width * 0.8;
+        ctx.strokeStyle = "#38BDF8";
+        ctx.shadowColor = "#38BDF8";
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = (1.0 - t) * 3 + 0.5;
+        ctx.globalAlpha = 1.0 - t;
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, coneRadius, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Small sonic particles shooting outwards
+        ctx.fillStyle = "#E0F2FE";
+        for (let s = 0; s < 6; s++) {
+          const sAngle = (s * Math.PI * 2) / 6;
+          const sX = cx + Math.cos(sAngle) * coneRadius;
+          const sY = cy + Math.sin(sAngle) * coneRadius;
+          ctx.beginPath();
+          ctx.arc(sX, sY, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "pixelRain": {
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+
+        // Retro 8-bit block pixel rain cascading down
+        for (let p = 0; p < 8; p++) {
+          const pSeed = seed + p * 13;
+          const r1 = seededRandom(pSeed);
+          const rainT = (t + r1) % 1;
+          
+          const rainX = Math.round((p / 8) * width);
+          const rainY = Math.round(rainT * height);
+          
+          let col = "#34D399"; // Green
+          if (p % 3 === 1) col = "#FBBF24"; // Yellow
+          else if (p % 3 === 2) col = "#60A5FA"; // Blue
+
+          ctx.fillStyle = col;
+          ctx.globalAlpha = 1.0 - rainT;
+          ctx.fillRect(rainX - 1, rainY - 1, 2, 2); // 8-bit square block
+        }
+        ctx.restore();
+        break;
+      }
+
+      case "magicRunicCircle": {
+        ctx.save();
+        ctx.globalCompositeOperation = "destination-over";
+
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // Ancient golden rotating runic circular glyph
+        ctx.translate(cx, cy);
+        ctx.rotate(t * Math.PI * 2);
+        ctx.strokeStyle = "#FBBF24";
+        ctx.shadowColor = "#F59E0B";
+        ctx.shadowBlur = 7;
+
+        // Outer glyph ring
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(0, 0, 13, 0, Math.PI * 2);
+        ctx.stroke();
+
+        // Inner decorative hexagram or star lines
+        ctx.lineWidth = 0.6;
+        ctx.beginPath();
+        for (let s = 0; s < 6; s++) {
+          const ang1 = (s * Math.PI * 2) / 6;
+          const ang2 = ((s + 2) * Math.PI * 2) / 6;
+          ctx.moveTo(Math.cos(ang1) * 11, Math.sin(ang1) * 11);
+          ctx.lineTo(Math.cos(ang2) * 11, Math.sin(ang2) * 11);
+        }
+        ctx.stroke();
+
+        ctx.restore();
+        ctx.drawImage(sourceCanvas, 0, 0);
+        break;
+      }
+
+      case "laserSaber": {
+        ctx.drawImage(sourceCanvas, 0, 0);
+        ctx.save();
+
+        const cx = sourceHotspotX;
+        const cy = sourceHotspotY;
+
+        // High frequency dual cross saber plasma lines discharging sparks
+        ctx.lineCap = "round";
+        ctx.shadowBlur = 8;
+
+        // Red Saber
+        ctx.strokeStyle = "#EF4444";
+        ctx.shadowColor = "#EF4444";
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(cx - 10, cy + 10);
+        ctx.lineTo(cx + 10, cy - 10);
+        ctx.stroke();
+
+        // Green Saber
+        ctx.strokeStyle = "#10B981";
+        ctx.shadowColor = "#10B981";
+        ctx.lineWidth = 3.5;
+        ctx.beginPath();
+        ctx.moveTo(cx + 10, cy + 10);
+        ctx.lineTo(cx - 10, cy - 10);
+        ctx.stroke();
+
+        // Inner white-hot laser core lines
+        ctx.strokeStyle = "#FFFFFF";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(cx - 10, cy + 10);
+        ctx.lineTo(cx + 10, cy - 10);
+        ctx.moveTo(cx + 10, cy + 10);
+        ctx.lineTo(cx - 10, cy - 10);
+        ctx.stroke();
+
+        ctx.restore();
         break;
       }
 

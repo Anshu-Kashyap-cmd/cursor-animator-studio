@@ -1,0 +1,100 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net default-deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Common global helpers
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Project schema validation
+    function isValidProject(data) {
+      return data.keys().hasAll(['id', 'user_id', 'name', 'mode', 'frame_count', 'total_duration_ms', 'easing', 'hotspot_x', 'hotspot_y', 'created_at', 'updated_at', 'frames'])
+        && data.id is string && data.id.size() <= 128
+        && (data.user_id == null || (data.user_id is string && data.user_id.size() <= 128))
+        && data.name is string && data.name.size() <= 100
+        && data.mode is string && (data.mode == 'auto' || data.mode == 'manual')
+        && data.frame_count is int && data.frame_count >= 0
+        && data.total_duration_ms is int && data.total_duration_ms >= 0
+        && data.easing is string && data.easing.size() <= 50
+        && data.hotspot_x is int && data.hotspot_y is int
+        && data.created_at is string && data.created_at.size() <= 50
+        && data.updated_at is string && data.updated_at.size() <= 50
+        && data.frames is list && data.frames.size() <= 100;
+    }
+
+    // Export history schema validation
+    function isValidExport(data) {
+      return data.keys().hasAll(['id', 'project_id', 'project_name', 'user_id', 'exported_format', 'file_size_bytes', 'total_duration_ms', 'exported_at', 'image_data'])
+        && data.id is string && data.id.size() <= 128
+        && data.project_id is string && data.project_id.size() <= 128
+        && data.project_name is string && data.project_name.size() <= 100
+        && (data.user_id == null || (data.user_id is string && data.user_id.size() <= 128))
+        && data.exported_format is string && (data.exported_format == 'ani' || data.exported_format == 'cur' || data.exported_format == 'gif' || data.exported_format == 'zip')
+        && data.file_size_bytes is int && data.file_size_bytes >= 0
+        && data.total_duration_ms is int && data.total_duration_ms >= 0
+        && data.exported_at is string && data.exported_at.size() <= 50
+        && data.image_data is string && data.image_data.size() <= 1048576;
+    }
+
+    // Users rules (Strict PII isolation)
+    match /users/{userId} {
+      allow get: if isSignedIn() && request.auth.uid == userId;
+      allow list: if false; // Blanket queries are strictly blocked for user records
+      
+      allow create, update: if isSignedIn()
+        && request.auth.uid == userId
+        && request.resource.data.id == userId
+        && request.resource.data.keys().hasAll(['id', 'email', 'display_name', 'updated_at'])
+        && request.resource.data.email is string
+        && request.resource.data.display_name is string
+        && request.resource.data.updated_at is string;
+
+      allow delete: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Projects rules
+    match /projects/{projectId} {
+      allow get: if isSignedIn() && resource.data.user_id == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.user_id == request.auth.uid;
+      
+      allow create: if isSignedIn()
+        && isValidId(projectId)
+        && request.resource.data.user_id == request.auth.uid
+        && request.resource.data.id == projectId
+        && isValidProject(request.resource.data);
+
+      allow update: if isSignedIn()
+        && resource.data.user_id == request.auth.uid
+        && request.resource.data.user_id == request.auth.uid
+        && request.resource.data.id == resource.data.id
+        && isValidProject(request.resource.data);
+
+      allow delete: if isSignedIn() && resource.data.user_id == request.auth.uid;
+    }
+
+    // Export history rules
+    match /export_history/{historyId} {
+      allow get: if isSignedIn() && resource.data.user_id == request.auth.uid;
+      allow list: if isSignedIn() && resource.data.user_id == request.auth.uid;
+
+      allow create: if isSignedIn()
+        && isValidId(historyId)
+        && request.resource.data.user_id == request.auth.uid
+        && request.resource.data.id == historyId
+        && isValidExport(request.resource.data);
+
+      allow update: if false; // Export history logs are strictly immutable
+      allow delete: if isSignedIn() && resource.data.user_id == request.auth.uid;
+    }
+  }
+}

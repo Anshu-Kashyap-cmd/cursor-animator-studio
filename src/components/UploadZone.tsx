@@ -6,12 +6,35 @@ interface UploadZoneProps {
   mode: "auto" | "manual";
   onFramesLoaded: (frames: CursorFrame[], fileName: string) => void;
   onError: (msg: string) => void;
+  user: any;
+  onLogin: () => void;
 }
 
-export const UploadZone: React.FC<UploadZoneProps> = ({ mode, onFramesLoaded, onError }) => {
+export const UploadZone: React.FC<UploadZoneProps> = ({ 
+  mode, 
+  onFramesLoaded, 
+  onError,
+  user,
+  onLogin
+}) => {
   const [isDragActive, setIsDragActive] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const isDeveloper = (u: any) => {
+    if (u?.email === "mehraansh023@gmail.com") return true;
+    if (typeof window !== "undefined") {
+      const hostname = window.location.hostname;
+      if (hostname === "localhost" || hostname.includes("ais-dev") || hostname.includes("127.0.0.1")) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  const isDev = isDeveloper(user);
+  const isLoggedInRealUser = user !== null && !user.uid.startsWith("guest_");
+  const isRestricted = !isDev && !isLoggedInRealUser;
 
   const handleDrag = (e: React.DragEvent) => {
     e.preventDefault();
@@ -126,6 +149,12 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ mode, onFramesLoaded, on
     e.stopPropagation();
     setIsDragActive(false);
 
+    if (isRestricted) {
+      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onLogin();
+      return;
+    }
+
     if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
       processFiles(e.dataTransfer.files);
     }
@@ -133,12 +162,24 @@ export const UploadZone: React.FC<UploadZoneProps> = ({ mode, onFramesLoaded, on
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
+    if (isRestricted) {
+      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onLogin();
+      return;
+    }
     if (e.target.files && e.target.files.length > 0) {
       processFiles(e.target.files);
     }
   };
 
-  const onButtonClick = () => {
+  const onButtonClick = (e: React.MouseEvent) => {
+    if (isRestricted) {
+      e.preventDefault();
+      e.stopPropagation();
+      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onLogin();
+      return;
+    }
     fileInputRef.current?.click();
   };
 

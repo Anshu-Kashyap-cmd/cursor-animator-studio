@@ -142,7 +142,13 @@ export const Landing: React.FC<LandingProps> = ({
           </div>
 
           {/* Draggable Drop Upload Zone */}
-          <UploadZone mode={mode} onFramesLoaded={handleFramesLoaded} onError={showToast} />
+          <UploadZone 
+            mode={mode} 
+            onFramesLoaded={handleFramesLoaded} 
+            onError={showToast} 
+            user={user}
+            onLogin={onLogin}
+          />
         </GlassPanel>
 
         {/* Recent projects carousel */}

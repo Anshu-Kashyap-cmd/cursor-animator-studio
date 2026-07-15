@@ -86,9 +86,16 @@ export const ColorPaletteManager: React.FC<ColorPaletteManagerProps> = ({
           {activePalette.map((color) => {
             const isSelected = selectedColor === color;
             return (
-              <button
+              <div
                 key={color}
                 onClick={() => onSelectColor(color)}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    onSelectColor(color);
+                  }
+                }}
                 className={`group relative aspect-square rounded-xl cursor-pointer transition-all border flex items-center justify-center hover:scale-[1.08] ${
                   isSelected
                     ? "border-white scale-[1.04] shadow-[0_0_12px_rgba(255,255,255,0.2)]"
@@ -112,7 +119,7 @@ export const ColorPaletteManager: React.FC<ColorPaletteManagerProps> = ({
                 >
                   <Trash2 className="w-2.5 h-2.5" />
                 </button>
-              </button>
+              </div>
             );
           })}
         </div>

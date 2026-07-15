@@ -13,6 +13,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { GlassPanel } from "./GlassPanel.tsx";
+import { sendAiRequest, testApiKey, isKeyPlaceholder } from "../utils/api.ts";
 
 interface Message {
   role: "user" | "model";
@@ -33,11 +34,21 @@ export const GeminiAssistant: React.FC = () => {
 
   // Custom API Key & Model Configuration States
   const [showSettings, setShowSettings] = useState(false);
+
   const [apiKey, setApiKey] = useState(() => {
-    return localStorage.getItem("custom_gemini_api_key") || "Vs4W8vQIvZcNBztQQ0kA546e9O+bA2fdIVb6w4YPBjamXo6x+SbV2OhrDV0LxzEXY2q8iCnV3G1QuujuDDYrd2ptIqmmw9ldphK8Ez2WUE6ZO9fu9as6rJB19i4GKph0l22D7wO0SBolJ+/MxPQ=";
+    const saved = localStorage.getItem("custom_gemini_api_key");
+    if (!saved || isKeyPlaceholder(saved)) {
+      return "";
+    }
+    return saved;
   });
   const [selectedModel, setSelectedModel] = useState(() => {
-    return localStorage.getItem("custom_gemini_model") || "gemini-2.5-flash";
+    const savedKey = localStorage.getItem("custom_gemini_api_key");
+    const savedModel = localStorage.getItem("custom_gemini_model");
+    if (!savedKey || isKeyPlaceholder(savedKey)) {
+      return "gemini-2.5-flash";
+    }
+    return savedModel || "gemini-2.5-flash";
   });
   const [showKey, setShowKey] = useState(false);
   const [isTestingKey, setIsTestingKey] = useState(false);
@@ -56,15 +67,7 @@ export const GeminiAssistant: React.FC = () => {
     setIsTestingKey(true);
     setTestStatus(null);
     try {
-      const res = await fetch("/api/test-key", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ apiKey, model: selectedModel }),
-      });
-      if (!res.ok) {
-        throw new Error(`HTTP error ${res.status}`);
-      }
-      const data = await res.json();
+      const data = await testApiKey(apiKey, selectedModel);
       if (data.valid) {
         setTestStatus({ valid: true, response: data.text });
       } else {
@@ -106,22 +109,12 @@ export const GeminiAssistant: React.FC = () => {
           text: m.text,
         }));
 
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (apiKey) {
-        headers["x-custom-api-key"] = apiKey;
-      }
-
-      const res = await fetch("/api/ai-guide", {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ message: userText, history, model: selectedModel }),
+      const data = await sendAiRequest({
+        message: userText,
+        history,
+        model: selectedModel,
+        apiKey: apiKey || undefined
       });
-
-      if (!res.ok) {
-        throw new Error("Failed to consult the AI Guide.");
-      }
-
-      const data = await res.json();
 
       setMessages((prev) => [
         ...prev,
@@ -137,7 +130,7 @@ export const GeminiAssistant: React.FC = () => {
         ...prev,
         {
           role: "model",
-          text: "I encountered a slight issue connecting to Google Search. Please verify that your Gemini API key is configured correctly in the settings panel and try again!",
+          text: err.message || "I encountered an issue connecting. Please check if your custom API Key is valid and active, or try another model fallback!",
         },
       ]);
     } finally {
@@ -178,7 +171,7 @@ export const GeminiAssistant: React.FC = () => {
           <div className="space-y-2.5">
             {/* API Key Input */}
             <div className="space-y-1">
-              <label className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Gemini / Custom API Key</label>
+              <label className="text-[9px] font-bold text-neutral-400 uppercase tracking-wider block">Gemini / Groq / OpenRouter API Key</label>
               <div className="flex items-center space-x-2">
                 <div className="relative flex-1">
                   <input
@@ -188,7 +181,7 @@ export const GeminiAssistant: React.FC = () => {
                       setApiKey(e.target.value);
                       setTestStatus(null);
                     }}
-                    placeholder="Enter custom Gemini API key..."
+                    placeholder="Enter key (gsk_..., sk-or-..., or Gemini key)..."
                     className="w-full pl-8 pr-8 py-1.5 rounded-lg bg-neutral-900 border border-white/10 text-xs font-mono text-[#F3EDE7] focus:border-[#E8793A] focus:outline-none"
                   />
                   <Key className="w-3.5 h-3.5 text-neutral-500 absolute left-2.5 top-1/2 -translate-y-1/2" />
@@ -220,7 +213,7 @@ export const GeminiAssistant: React.FC = () => {
                 {testStatus.valid ? (
                   <div className="flex items-start gap-1.5">
                     <ShieldCheck className="w-4 h-4 shrink-0 text-[#7FBF8E]" />
-                    <span>API Key is VALID! Response from model: "{testStatus.response}"</span>
+                    <span>API Key is VALID! Response: "{testStatus.response}"</span>
                   </div>
                 ) : (
                   <div className="flex items-start gap-1.5">
@@ -239,14 +232,21 @@ export const GeminiAssistant: React.FC = () => {
                 onChange={(e) => setSelectedModel(e.target.value)}
                 className="w-full px-2.5 py-1.5 rounded-lg bg-neutral-900 border border-white/10 text-xs text-[#F3EDE7] focus:border-[#E8793A] focus:outline-none cursor-pointer"
               >
-                <option value="gemini-2.5-flash">Gemini 2.5 Flash (Recommended)</option>
-                <option value="gemini-2.5-pro">Gemini 2.5 Pro</option>
-                <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
-                <option value="llm7">LLM7 Custom Model (Mapped)</option>
+                <option value="llama-3.1-8b">Llama 3.1 8B (Groq - Ultra Fast)</option>
+                <option value="llama-3.3-70b">Llama 3.3 70B (Groq - Smart/Detailed)</option>
+                <option value="mixtral-8x7b">Mixtral 8x7B (Groq - Versatile)</option>
+                <option value="gemma2-9b">Gemma 2 9B (Groq - Light)</option>
+                <option value="gemini-2.5-flash">Gemini 2.5 Flash (With Search Grounding)</option>
+                <option value="gemini-2.5-pro">Gemini 2.5 Pro (With Search Grounding)</option>
               </select>
             </div>
             
-            {apiKey && (
+            {!apiKey ? (
+              <div className="flex items-center space-x-1.5 text-[10px] text-[#7FBF8E] font-medium pt-1 bg-[#7FBF8E]/5 p-2 rounded-lg border border-[#7FBF8E]/10">
+                <ShieldCheck className="w-3.5 h-3.5 text-[#7FBF8E]" />
+                <span>Using built-in system Gemini key (Free & Fast)!</span>
+              </div>
+            ) : (
               <div className="flex items-center space-x-1.5 text-[10px] text-[#7FBF8E] font-medium pt-1 bg-[#7FBF8E]/5 p-2 rounded-lg border border-[#7FBF8E]/10">
                 <ShieldCheck className="w-3.5 h-3.5" />
                 <span>Custom secure API key is bound & will be used for queries!</span>
@@ -303,7 +303,11 @@ export const GeminiAssistant: React.FC = () => {
         {isLoading && (
           <div className="flex items-center space-x-2 mr-auto bg-white/[0.02] border border-white/5 p-3 rounded-xl rounded-bl-none">
             <RefreshCw className="w-3.5 h-3.5 text-[#E8793A] animate-spin" />
-            <span className="text-[10px] text-[#B8ADA3] font-medium animate-pulse">Consulting Google Search...</span>
+            <span className="text-[10px] text-[#B8ADA3] font-medium animate-pulse">
+              {selectedModel.includes("llama") || selectedModel.includes("mixtral") || selectedModel.includes("gemma") 
+                ? "Processing with Groq..." 
+                : "Consulting Google Search..."}
+            </span>
           </div>
         )}
         <div ref={messagesEndRef} />

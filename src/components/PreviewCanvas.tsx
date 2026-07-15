@@ -353,6 +353,92 @@ export const PreviewCanvas: React.FC<PreviewCanvasProps> = ({
     }
   };
 
+  const handleCanvasTouchStart = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    const canvas = editCanvasRef.current;
+    if (!canvas || !activeFrame || e.touches.length === 0) return;
+
+    // Prevent scrolling or long-press context menu on iPad/iOS
+    e.preventDefault();
+    setIsPlaying(false);
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = activeFrame.width / rect.width;
+    const scaleY = activeFrame.height / rect.height;
+
+    const touch = e.touches[0];
+    const clickX = Math.round((touch.clientX - rect.left) * scaleX);
+    const clickY = Math.round((touch.clientY - rect.top) * scaleY);
+
+    const x = Math.max(0, Math.min(activeFrame.width - 1, clickX));
+    const y = Math.max(0, Math.min(activeFrame.height - 1, clickY));
+
+    if (tool === "hotspot") {
+      onHotspotChanged(x, y, applyToAll);
+      return;
+    }
+
+    if (tool === "bucket") {
+      floodFill(x, y, selectedColor);
+      triggerRender();
+      if (offscreenCanvasRef.current && onFrameUpdated) {
+        onFrameUpdated({
+          ...activeFrame,
+          image_data: offscreenCanvasRef.current.toDataURL("image/png"),
+        });
+      }
+      return;
+    }
+
+    setIsDrawing(true);
+    setLastPoint({ x, y });
+    setSmoothedPoint({ x, y });
+
+    // Draw single starting pixel
+    drawStroke(x, y, x, y);
+    triggerRender();
+  };
+
+  const handleCanvasTouchMove = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing || !activeFrame || tool === "hotspot" || e.touches.length === 0) return;
+    const canvas = editCanvasRef.current;
+    if (!canvas) return;
+
+    e.preventDefault(); // Stop page from scrolling or dragging around!
+
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = activeFrame.width / rect.width;
+    const scaleY = activeFrame.height / rect.height;
+
+    const touch = e.touches[0];
+    const clickX = Math.round((touch.clientX - rect.left) * scaleX);
+    const clickY = Math.round((touch.clientY - rect.top) * scaleY);
+
+    const x = Math.max(0, Math.min(activeFrame.width - 1, clickX));
+    const y = Math.max(0, Math.min(activeFrame.height - 1, clickY));
+
+    if (lastPoint) {
+      let targetX = x;
+      let targetY = y;
+      if (tool === "smart_brush") {
+        const smoothFactor = 0.55;
+        const prevS = smoothedPoint || lastPoint;
+        targetX = Math.round(prevS.x * smoothFactor + x * (1 - smoothFactor));
+        targetY = Math.round(prevS.y * smoothFactor + y * (1 - smoothFactor));
+        setSmoothedPoint({ x: targetX, y: targetY });
+      }
+
+      drawStroke(lastPoint.x, lastPoint.y, targetX, targetY);
+      setLastPoint({ x: targetX, y: targetY });
+      triggerRender();
+    }
+  };
+
+  const handleCanvasTouchEnd = (e: React.TouchEvent<HTMLCanvasElement>) => {
+    if (!isDrawing) return;
+    e.preventDefault();
+    handleCanvasMouseUp();
+  };
+
   const timerRef = useRef<number | null>(null);
   const playIndexRef = useRef(activeFrameIndex);
 
@@ -794,6 +880,9 @@ export const PreviewCanvas: React.FC<PreviewCanvasProps> = ({
                 onMouseMove={handleCanvasMouseMove}
                 onMouseUp={handleCanvasMouseUp}
                 onMouseLeave={handleCanvasMouseUp}
+                onTouchStart={handleCanvasTouchStart}
+                onTouchMove={handleCanvasTouchMove}
+                onTouchEnd={handleCanvasTouchEnd}
                 className={`block shadow-inner bg-neutral-900/40 relative z-10 transition-all ${
                   tool === "hotspot"
                     ? "cursor-crosshair"
