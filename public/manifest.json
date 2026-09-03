@@ -14,31 +14,31 @@
   "categories": ["utilities", "productivity", "graphics"],
   "icons": [
     {
-      "src": "icon-144.png",
+      "src": "/icon-144.png",
       "sizes": "144x144",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-192.png",
+      "src": "/icon-192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-384.png",
+      "src": "/icon-384.png",
       "sizes": "384x384",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "icon-512.png",
+      "src": "/icon-512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -46,14 +46,14 @@
   ],
   "screenshots": [
     {
-      "src": "desktop_screenshot.png",
+      "src": "/desktop_screenshot.png",
       "sizes": "1920x1080",
       "type": "image/png",
       "form_factor": "wide",
       "label": "Cursor Animator Studio Workspace View"
     },
     {
-      "src": "mobile_screenshot.png",
+      "src": "/mobile_screenshot.png",
       "sizes": "1080x1920",
       "type": "image/png",
       "form_factor": "narrow",
@@ -66,14 +66,14 @@
       "short_name": "New Cursor",
       "description": "Open the workspace to design a new custom cursor from scratch",
       "url": "/?action=new-cursor",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     },
     {
       "name": "My Dashboard",
       "short_name": "Dashboard",
       "description": "View your saved mouse cursors and active animation projects",
       "url": "/?action=dashboard",
-      "icons": [{ "src": "icon-192.png", "sizes": "192x192" }]
+      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ],
   "file_handlers": [
@@ -85,7 +85,7 @@
       },
       "icons": [
         {
-          "src": "icon-192.png",
+          "src": "/icon-192.png",
           "sizes": "192x192",
           "type": "image/png"
         }

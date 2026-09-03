@@ -1,10 +1,11 @@
 import React, { useState, useRef } from "react";
-import { Upload, MousePointer, Image as ImageIcon, AlertCircle } from "lucide-react";
+import { Upload, MousePointer, Image as ImageIcon, Video as VideoIcon, Film } from "lucide-react";
 import { parseCurFile, CursorFrame } from "../engine/curParser.ts";
 
 interface UploadZoneProps {
-  mode: "auto" | "manual";
+  mode: "auto" | "manual" | "video";
   onFramesLoaded: (frames: CursorFrame[], fileName: string) => void;
+  onVideoFileSelected?: (file: File) => void;
   onError: (msg: string) => void;
   user: any;
   onLogin: () => void;
@@ -13,6 +14,7 @@ interface UploadZoneProps {
 export const UploadZone: React.FC<UploadZoneProps> = ({ 
   mode, 
   onFramesLoaded, 
+  onVideoFileSelected,
   onError,
   user,
   onLogin
@@ -48,6 +50,16 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
 
   const processFiles = async (files: FileList) => {
     if (files.length === 0) return;
+
+    // Check if user uploaded a video file
+    const firstFile = files[0];
+    if (firstFile.type.startsWith("video/") || mode === "video") {
+      if (onVideoFileSelected) {
+        onVideoFileSelected(firstFile);
+        return;
+      }
+    }
+
     setIsLoading(true);
 
     try {
@@ -117,14 +129,12 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     canvas.height = targetHeight;
     const ctx = canvas.getContext("2d");
     if (ctx) {
-      // Put the original image data onto an offscreen canvas of the original size first
       const srcCanvas = document.createElement("canvas");
       srcCanvas.width = frame.width;
       srcCanvas.height = frame.height;
       const srcCtx = srcCanvas.getContext("2d");
       if (srcCtx) {
         srcCtx.putImageData(frame.imageData, 0, 0);
-        // Draw with stretching/resizing
         ctx.drawImage(srcCanvas, 0, 0, targetWidth, targetHeight);
       }
     }
@@ -136,7 +146,6 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       ...frame,
       width: targetWidth,
       height: targetHeight,
-      // Scale hotspot proportionally
       hotspotX: Math.round((frame.hotspotX / frame.width) * targetWidth),
       hotspotY: Math.round((frame.hotspotY / frame.height) * targetHeight),
       imageData: newImageData,
@@ -203,7 +212,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
         ref={fileInputRef}
         type="file"
         multiple={mode === "manual"}
-        accept=".cur,.ico"
+        accept={mode === "video" ? "video/*" : ".cur,.ico,video/*"}
         onChange={handleChange}
         className="hidden"
       />
@@ -211,13 +220,15 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
       {isLoading ? (
         <div className="flex flex-col items-center space-y-4">
           <div className="w-10 h-10 border-4 border-[#E8793A] border-t-transparent rounded-full animate-spin"></div>
-          <p className="text-sm font-medium text-[#F3EDE7] animate-pulse">Parsing cursor bytes...</p>
+          <p className="text-sm font-medium text-[#F3EDE7] animate-pulse">Processing files...</p>
         </div>
       ) : (
         <div className="flex flex-col items-center text-center space-y-5">
           <div className="relative p-5 rounded-full bg-white/[0.04] group-hover:bg-white/[0.08] transition-all group-hover:scale-110 duration-300">
             {mode === "auto" ? (
               <MousePointer className="w-10 h-10 text-[#E8793A] stroke-[1.5]" />
+            ) : mode === "video" ? (
+              <VideoIcon className="w-10 h-10 text-[#E8793A] stroke-[1.5]" />
             ) : (
               <ImageIcon className="w-10 h-10 text-[#E8793A] stroke-[1.5]" />
             )}
@@ -230,17 +241,21 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
             <h3 className="text-xl font-bold tracking-tight text-[#F3EDE7]">
               {mode === "auto"
                 ? "Upload static cursor to animate"
+                : mode === "video"
+                ? "Upload video to extract cursor frames"
                 : "Upload multiple frames"}
             </h3>
             <p className="text-sm text-[#B8ADA3] max-w-sm">
               {mode === "auto"
                 ? "Drag & drop a single .cur or .ico file, or click to browse. We will procedurally generate looping animations."
+                : mode === "video"
+                ? "Upload MP4, WEBM, MOV video files of any size. Extract video frames with background removal & video effects!"
                 : "Select multiple .cur files (or drag a collection). We will assemble them into an ordered timeline."}
             </p>
           </div>
 
           <div className="px-4 py-2 text-xs font-mono font-medium rounded-full bg-[#6E5A7B]/40 border border-[#6E5A7B]/40 text-[#B8ADA3] group-hover:text-[#F3EDE7] transition-colors">
-            {mode === "auto" ? "Accepts CUR / ICO (single)" : "Accepts multiple CUR / ICO"}
+            {mode === "auto" ? "Accepts CUR / ICO (single)" : mode === "video" ? "Accepts MP4 / WEBM / MOV (Any Size)" : "Accepts multiple CUR / ICO"}
           </div>
         </div>
       )}
@@ -251,3 +266,4 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     </div>
   );
 };
+

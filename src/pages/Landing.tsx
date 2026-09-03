@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { MousePointer, Images, LogIn, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles } from "lucide-react";
+import { MousePointer, Images, LogIn, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles, Video, Film } from "lucide-react";
 import { UploadZone } from "../components/UploadZone.tsx";
 import { GlassPanel } from "../components/GlassPanel.tsx";
+import { VideoToFramesExtractorModal } from "../components/VideoToFramesExtractorModal.tsx";
 import { CursorFrame } from "../engine/curParser.ts";
 import { ProjectData } from "../types.ts";
 import { loadProjectsFromDb, deleteProjectFromDb } from "../db/projects.ts";
@@ -22,9 +23,13 @@ export const Landing: React.FC<LandingProps> = ({
   onCreateProjectFromFrames,
   onNavigateTo,
 }) => {
-  const [mode, setMode] = useState<"auto" | "manual">("auto");
+  const [mode, setMode] = useState<"auto" | "manual" | "video">("auto");
   const [recentProjects, setRecentProjects] = useState<ProjectData[]>([]);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+
+  // Video Extractor Modal state
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
+  const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null);
 
   useEffect(() => {
     const fetchRecent = async () => {
@@ -49,7 +54,16 @@ export const Landing: React.FC<LandingProps> = ({
   };
 
   const handleFramesLoaded = (frames: CursorFrame[], fileName: string) => {
-    onCreateProjectFromFrames(frames, fileName, mode);
+    onCreateProjectFromFrames(frames, fileName, mode === "video" ? "manual" : mode);
+  };
+
+  const handleVideoFileSelected = (file: File) => {
+    setSelectedVideoFile(file);
+    setIsVideoModalOpen(true);
+  };
+
+  const handleVideoExtractedFrames = (frames: CursorFrame[], projectName: string) => {
+    onCreateProjectFromFrames(frames, projectName, "manual");
   };
 
   return (
@@ -58,7 +72,7 @@ export const Landing: React.FC<LandingProps> = ({
       <header className="max-w-6xl mx-auto w-full flex items-center justify-between mb-8">
         <div className="flex items-center space-x-2.5">
           <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E8793A]/20 via-[#1C1512] to-[#6E5A7B]/20 flex items-center justify-center shadow-lg shadow-[#E8793A]/10 border border-[#E8793A]/30 overflow-hidden">
-            <img src="logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-[#F3EDE7] to-[#B8ADA3] bg-clip-text text-transparent">
             Cursor Animator Studio
@@ -109,35 +123,49 @@ export const Landing: React.FC<LandingProps> = ({
             Animate Windows Cursors
           </h1>
           <p className="text-sm text-[#B8ADA3] leading-relaxed">
-            Create premium animated <span className="font-mono text-[#E8793A]">.ani</span> cursor schemes. Procedurally transform static pointers or order custom frames. Pure client-side binary compiler.
+            Create premium animated <span className="font-mono text-[#E8793A]">.ani</span> cursor schemes. Procedurally transform static pointers, order custom frames, or extract frames directly from <span className="text-white font-semibold">Video Clips</span>!
           </p>
         </div>
 
         {/* Upload card panel */}
         <GlassPanel className="w-full max-w-xl p-6" intensity="medium">
           {/* Mode Selector Pill */}
-          <div className="flex bg-neutral-950/40 p-1 rounded-xl mb-6 border border-white/5 w-fit mx-auto">
+          <div className="flex flex-wrap justify-center gap-1 bg-neutral-950/40 p-1 rounded-xl mb-6 border border-white/5 w-fit mx-auto">
             <button
               onClick={() => setMode("auto")}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 mode === "auto"
                   ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/15"
                   : "text-[#B8ADA3] hover:text-white"
               }`}
             >
               <MousePointer className="w-3.5 h-3.5" />
-              <span>Auto-Animate (Single File)</span>
+              <span>Auto-Animate</span>
             </button>
             <button
               onClick={() => setMode("manual")}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 mode === "manual"
                   ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/15"
                   : "text-[#B8ADA3] hover:text-white"
               }`}
             >
               <Images className="w-3.5 h-3.5" />
-              <span>Manual Frames (Ordered)</span>
+              <span>Manual Frames</span>
+            </button>
+            <button
+              onClick={() => {
+                setMode("video");
+                setIsVideoModalOpen(true);
+              }}
+              className={`flex items-center space-x-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                mode === "video"
+                  ? "bg-[#E8793A] text-[#1C1512] shadow-md shadow-[#E8793A]/15"
+                  : "text-[#B8ADA3] hover:text-white"
+              }`}
+            >
+              <Video className="w-3.5 h-3.5" />
+              <span>Video to Cursor 🎥</span>
             </button>
           </div>
 
@@ -145,11 +173,41 @@ export const Landing: React.FC<LandingProps> = ({
           <UploadZone 
             mode={mode} 
             onFramesLoaded={handleFramesLoaded} 
+            onVideoFileSelected={handleVideoFileSelected}
             onError={showToast} 
             user={user}
             onLogin={onLogin}
           />
         </GlassPanel>
+
+        {/* Video to Cursor Feature Banner */}
+        <div className="w-full max-w-xl p-4 rounded-2xl bg-gradient-to-r from-[#E8793A]/10 via-[#1C1512] to-[#6E5A7B]/20 border border-[#E8793A]/30 flex items-center justify-between">
+          <div className="flex items-center space-x-3">
+            <div className="p-2.5 rounded-xl bg-[#E8793A]/20 text-[#E8793A] border border-[#E8793A]/30">
+              <Film className="w-5 h-5" />
+            </div>
+            <div>
+              <h4 className="text-xs font-bold text-white flex items-center gap-1.5">
+                Convert Any Video into Cursor (.ANI)
+                <span className="text-[9px] px-1.5 py-0.2 rounded bg-[#E8793A] text-[#1C1512] font-bold">
+                  NEW
+                </span>
+              </h4>
+              <p className="text-[11px] text-[#B8ADA3]">
+                Extract video frames, remove backgrounds (Chroma key), and apply color FX.
+              </p>
+            </div>
+          </div>
+          <button
+            onClick={() => {
+              setSelectedVideoFile(null);
+              setIsVideoModalOpen(true);
+            }}
+            className="px-3.5 py-2 rounded-xl bg-[#E8793A] hover:bg-[#F2925C] text-[#1C1512] font-bold text-xs transition-all shadow-md shadow-[#E8793A]/15 cursor-pointer whitespace-nowrap"
+          >
+            Open Video Extractor
+          </button>
+        </div>
 
         {/* Recent projects carousel */}
         {recentProjects.length > 0 && (
@@ -198,10 +256,10 @@ export const Landing: React.FC<LandingProps> = ({
                     <span>{(p.total_duration_ms / 1000).toFixed(1)}s</span>
                   </div>
 
-                  {/* Delete button hover overlay */}
+                  {/* Delete button always visible and highly clickable */}
                   <button
                     onClick={(e) => handleDeleteProject(e, p.id)}
-                    className="absolute top-2 right-2 p-1.5 rounded bg-black/80 hover:bg-red-500/10 text-[#B8ADA3] hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity border border-white/5 cursor-pointer"
+                    className="absolute top-2.5 right-2.5 z-20 p-2 rounded-lg bg-black/70 hover:bg-red-500/15 border border-white/10 hover:border-red-500/30 text-red-400 hover:text-red-300 transition-all cursor-pointer shadow-md shadow-black/40"
                     title="Delete project"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
@@ -222,6 +280,14 @@ export const Landing: React.FC<LandingProps> = ({
           </div>
         )}
       </main>
+
+      {/* Video Extractor Modal */}
+      <VideoToFramesExtractorModal
+        isOpen={isVideoModalOpen}
+        onClose={() => setIsVideoModalOpen(false)}
+        onFramesExtracted={handleVideoExtractedFrames}
+        initialFile={selectedVideoFile}
+      />
 
       {/* Footer */}
       <footer className="max-w-6xl mx-auto w-full text-center text-xs text-[#B8ADA3] pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-2">
