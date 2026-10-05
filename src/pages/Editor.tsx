@@ -21,7 +21,6 @@ import { writeCurFile } from "../engine/curWriter.ts";
 import { writeAniFile } from "../engine/aniWriter.ts";
 import JSZip from "jszip";
 import gifshot from "gifshot";
-import { User } from "firebase/auth";
 
 interface HotkeyItem {
   keys: string[];
@@ -53,7 +52,7 @@ const SHORTCUTS: HotkeyItem[] = [
 ];
 
 interface EditorProps {
-  user: User | null;
+  user?: any;
   initialProject: ProjectData;
   onNavigateHome: () => void;
 }

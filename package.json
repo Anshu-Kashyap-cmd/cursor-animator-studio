@@ -1,7 +1,10 @@
 {
-  "name": "react-example",
-  "private": true,
-  "version": "0.0.0",
+  "name": "cursor-animator-studio",
+  "version": "1.0.0",
+  "description": "Professional Windows Animated Cursor (.ANI) and Static Cursor (.CUR) creator, video-to-cursor extractor, and timeline editor by Anshu Kashyap (aicreation2026.blogspot.com).",
+  "author": "Anshu Kashyap <aicreation2026.blogspot.com>",
+  "homepage": "https://aicreation2026.blogspot.com",
+  "license": "MIT",
   "type": "module",
   "scripts": {
     "dev": "tsx server.ts",

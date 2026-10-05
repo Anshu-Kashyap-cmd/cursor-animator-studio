@@ -1,12 +1,25 @@
 # 🖱️ Cursor Animator Studio (.CUR / .ANI Creator & Video Processor)
 
+[![Creator](https://img.shields.io/badge/Created%20By-Anshu%20Kashyap-FFA873?style=for-the-badge&logo=codeforces&logoColor=white)](https://aicreation2026.blogspot.com)
+[![Website](https://img.shields.io/badge/Official%20Hub-aicreation2026.blogspot.com-E8793A?style=for-the-badge&logo=blogger&logoColor=white)](https://aicreation2026.blogspot.com)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
+[![Security Policy](https://img.shields.io/badge/Security-Policy-7FBF8E.svg?style=for-the-badge&logo=shield)](./SECURITY.md)
+[![Privacy Guarantee](https://img.shields.io/badge/Privacy-100%25%20Local-blue.svg?style=for-the-badge&logo=securityscorecard)](./PRIVACY_POLICY.md)
+
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-6-646CFF.svg?logo=vite)](https://vitejs.dev/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-v4-38B2AC.svg?logo=tailwind-css)](https://tailwindcss.com/)
 [![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28.svg?logo=firebase)](https://firebase.google.com/)
 
-> **Cursor Animator Studio** is an all-in-one, professional web workstation for designing, animating, converting, and exporting high-fidelity Windows Animated Cursors (`.ani`), Static Cursors (`.cur`), Animated GIFs, and Spritesheets. Featuring client-side hardware-accelerated **Video-to-Frames Extraction**, custom visual effects, timeline tweening, chroma key background removal, and Firebase cloud project synchronization.
+---
+
+### 👑 **Author & Creator:** **[Anshu Kashyap](https://aicreation2026.blogspot.com)**
+### 🌐 **Official Website:** **[https://aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**
+
+---
+
+> **Cursor Animator Studio** is an all-in-one, professional web workstation created by **Anshu Kashyap** for designing, animating, converting, and exporting high-fidelity Windows Animated Cursors (`.ani`), Static Cursors (`.cur`), Animated GIFs, and Spritesheets. Featuring client-side hardware-accelerated **Video-to-Frames Extraction**, custom visual effects, timeline tweening, chroma key background removal, and Firebase cloud project synchronization. Official tools & updates available at **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
 
 ---
 
@@ -74,10 +87,10 @@ Export your creations in multiple industry-standard formats:
 
 ---
 
-### 6. ☁️ Firebase Cloud Sync & Gallery
-- **Project Cloud Persistence**: Save and reload projects with full timeline history in Firebase Firestore.
-- **Public & Community Showcase**: Share curated cursor packs with unique links.
-- **Local Storage Fallback**: Automatic offline persistence via IndexedDB (`idb-keyval`) ensures zero work loss even without an active internet connection.
+### 6. ⚡ 100% Login-Free & Offline-First Workspace
+- **Zero Login Friction**: No accounts, passwords, or authentication required. Anyone cloning the repository can run and use all features instantly.
+- **Offline-First Persistence**: Powered by browser IndexedDB (`idb-keyval`). Projects, custom keyframes, video extractions, and timeline settings auto-save locally with zero data loss.
+- **Privacy & Security**: All image and video processing runs 100% client-side inside the user's browser. No private files or frames are transmitted to external servers.
 
 ---
 
@@ -198,7 +211,34 @@ Export your creations in multiple industry-standard formats:
 
 ---
 
+## 🛡️ Security, Privacy & Legal Policies
+
+| Document | Description | Direct Link |
+|---|---|---|
+| **Security Policy** | Binary sanitization, zero server vulnerability, responsible vulnerability disclosure | [SECURITY.md](./SECURITY.md) |
+| **Privacy Policy** | 100% Client-side local in-memory guarantee, zero tracking, no cookies | [PRIVACY_POLICY.md](./PRIVACY_POLICY.md) |
+| **Disclaimer & Terms** | MIT open-source warranty, user ownership of created assets, trademark compatibility | [DISCLAIMER.md](./DISCLAIMER.md) |
+| **Official License** | Standard MIT Open Source License | [LICENSE](./LICENSE) |
+
+---
+
+## 👑 Author, Creator & Official Hub
+
+| Attribute | Details |
+|---|---|
+| **Author / Creator** | **Anshu Kashyap** |
+| **Official Website & Portal** | **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)** |
+| **Direct URL** | `https://aicreation2026.blogspot.com` |
+| **Specialization** | AI Tools, Digital Studios, Software Design & Graphic Utilities |
+
+> **Connect & Explore**: For exclusive software releases, custom cursor packs, animated templates, and technical tutorials, visit the official portal at **[https://aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
+
+---
+
 ## 📄 License & Credits
 
-Built with ❤️ using React 19, TypeScript, and Tailwind CSS.
-Free for personal and commercial cursor creation.
+- **Architect & Lead Developer:** **Anshu Kashyap**
+- **Official Hub:** **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**
+- Built with ❤️ using React 19, TypeScript, and Tailwind CSS.
+- Free for personal and commercial cursor creation.
+

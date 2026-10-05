@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, Search, SlidersHorizontal, MousePointer, Trash2, Edit3, Copy, RefreshCw, Clock, HardDriveDownload, Sparkles, FolderPlus } from "lucide-react";
 import { GlassPanel } from "../components/GlassPanel.tsx";
+import { CreatorBanner } from "../components/CreatorBanner.tsx";
 import { ProjectData, ExportHistoryEntry } from "../types.ts";
 import { loadProjectsFromDb, deleteProjectFromDb, saveProjectToDb, loadExportHistory } from "../db/projects.ts";
-import { User } from "firebase/auth";
 
 interface DashboardProps {
-  user: User | null;
+  user?: any;
   onSelectProject: (project: ProjectData) => void;
   onNavigateHome: () => void;
 }
@@ -342,6 +342,11 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSelectProject, onN
               </div>
             )}
           </div>
+        </div>
+
+        {/* Creator Credit Banner */}
+        <div className="mt-8">
+          <CreatorBanner variant="compact" />
         </div>
       </main>
 

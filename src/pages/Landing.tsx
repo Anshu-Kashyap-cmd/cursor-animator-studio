@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { MousePointer, Images, LogIn, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles, Video, Film } from "lucide-react";
+import { MousePointer, Images, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles, Video, Film, PlusCircle } from "lucide-react";
 import { UploadZone } from "../components/UploadZone.tsx";
 import { GlassPanel } from "../components/GlassPanel.tsx";
 import { VideoToFramesExtractorModal } from "../components/VideoToFramesExtractorModal.tsx";
+import { CreatorBanner } from "../components/CreatorBanner.tsx";
+import { PolicyModal, PolicyTab } from "../components/PolicyModal.tsx";
 import { CursorFrame } from "../engine/curParser.ts";
 import { ProjectData } from "../types.ts";
 import { loadProjectsFromDb, deleteProjectFromDb } from "../db/projects.ts";
-import { User } from "firebase/auth";
 
 interface LandingProps {
-  user: User | null;
-  onLogin: () => void;
+  user?: any;
+  onLogin?: () => void;
   onSelectProject: (project: ProjectData) => void;
   onCreateProjectFromFrames: (frames: CursorFrame[], name: string, mode: "auto" | "manual") => void;
   onNavigateTo: (page: "landing" | "editor" | "dashboard" | "settings") => void;
@@ -30,6 +31,10 @@ export const Landing: React.FC<LandingProps> = ({
   // Video Extractor Modal state
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [selectedVideoFile, setSelectedVideoFile] = useState<File | null>(null);
+
+  // Policy Modal state
+  const [isPolicyModalOpen, setIsPolicyModalOpen] = useState(false);
+  const [policyModalTab, setPolicyModalTab] = useState<PolicyTab>("privacy");
 
   useEffect(() => {
     const fetchRecent = async () => {
@@ -80,39 +85,20 @@ export const Landing: React.FC<LandingProps> = ({
         </div>
 
         <div className="flex items-center space-x-3">
-          {user ? (
-            <>
-              <button
-                onClick={() => onNavigateTo("dashboard")}
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white/[0.04] hover:bg-[#6E5A7B]/40 text-xs font-semibold border border-white/5 transition-all cursor-pointer"
-              >
-                <LayoutGrid className="w-3.5 h-3.5 text-[#E8793A]" />
-                <span>My Dashboard</span>
-              </button>
-              <button
-                onClick={() => onNavigateTo("settings")}
-                className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold border border-white/5 transition-all cursor-pointer"
-              >
-                <Settings className="w-3.5 h-3.5" />
-                <span>Settings</span>
-              </button>
-              <div className="flex items-center space-x-2 pl-2 border-l border-white/10">
-                <img
-                  src={user.photoURL || "https://www.gstatic.com/images/branding/product/1x/avatar_circle_blue_512dp.png"}
-                  alt={user.displayName || "User"}
-                  className="w-7 h-7 rounded-full border border-white/10"
-                />
-              </div>
-            </>
-          ) : (
-            <button
-              onClick={onLogin}
-              className="flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-[#E8793A] hover:bg-[#F2925C] text-[#1C1512] text-xs font-bold transition-all hover:scale-105 active:scale-95 shadow-md shadow-[#E8793A]/10 cursor-pointer"
-            >
-              <LogIn className="w-3.5 h-3.5" />
-              <span>Sign In with Google</span>
-            </button>
-          )}
+          <button
+            onClick={() => onNavigateTo("dashboard")}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white/[0.04] hover:bg-[#6E5A7B]/40 text-xs font-semibold border border-white/5 transition-all cursor-pointer"
+          >
+            <LayoutGrid className="w-3.5 h-3.5 text-[#E8793A]" />
+            <span>My Projects</span>
+          </button>
+          <button
+            onClick={() => onNavigateTo("settings")}
+            className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white/[0.04] hover:bg-white/[0.08] text-xs font-semibold border border-white/5 transition-all cursor-pointer"
+          >
+            <Settings className="w-3.5 h-3.5" />
+            <span>Settings</span>
+          </button>
         </div>
       </header>
 
@@ -270,15 +256,13 @@ export const Landing: React.FC<LandingProps> = ({
           </div>
         )}
 
-        {/* Offline banner notification */}
-        {!user && (
-          <div className="p-3.5 rounded-xl bg-[#6E5A7B]/10 border border-[#6E5A7B]/20 max-w-lg text-center flex items-center justify-center space-x-2">
-            <Sparkles className="w-4.5 h-4.5 text-[#E8793A] animate-pulse" />
-            <p className="text-xs text-[#B8ADA3]">
-              You are editing in guest mode. Drafts will save locally in your browser. <button onClick={onLogin} className="text-[#E8793A] font-bold underline hover:text-[#F2925C] cursor-pointer">Sign in</button> to enable persistent cloud sync!
-            </p>
-          </div>
-        )}
+        {/* Open-Source banner notification */}
+        <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#E8793A]/10 via-black/40 to-[#6E5A7B]/10 border border-[#E8793A]/25 max-w-xl text-center flex items-center justify-center space-x-2.5 shadow-md">
+          <Sparkles className="w-4.5 h-4.5 text-[#E8793A] animate-pulse flex-shrink-0" />
+          <p className="text-xs text-[#D6CAC0]">
+            <strong className="text-white font-bold">100% Free & Open-Source:</strong> No login or account required! All features and projects auto-save locally to your browser.
+          </p>
+        </div>
       </main>
 
       {/* Video Extractor Modal */}
@@ -289,13 +273,82 @@ export const Landing: React.FC<LandingProps> = ({
         initialFile={selectedVideoFile}
       />
 
+      {/* Creator & Portal Showcase Banner */}
+      <section className="max-w-6xl mx-auto w-full px-2">
+        <CreatorBanner variant="full" />
+      </section>
+
       {/* Footer */}
-      <footer className="max-w-6xl mx-auto w-full text-center text-xs text-[#B8ADA3] pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-2">
-        <p>© 2026 Cursor Animator Studio. Handcrafted offline-first compiler.</p>
-        <p className="font-mono text-[10px] text-neutral-500">
-          Support formats: Windows CUR, ICO, ANI (RIFF/ACON)
-        </p>
+      <footer className="max-w-6xl mx-auto w-full text-xs text-[#B8ADA3] pt-6 pb-4 border-t border-white/10 flex flex-col gap-3">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row items-center gap-2 text-center sm:text-left">
+            <span className="text-[#F3EDE7]">© 2026 Cursor Animator Studio.</span>
+            <span className="hidden sm:inline text-white/20">•</span>
+            <span className="text-[#D6CAC0]">
+              Crafted with passion by{" "}
+              <strong className="text-white font-black bg-gradient-to-r from-[#FFA873] to-[#FFD1A4] bg-clip-text text-transparent text-sm tracking-wide px-1">
+                Anshu Kashyap
+              </strong>
+            </span>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <a
+              href="https://aicreation2026.blogspot.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-[#E8793A]/15 hover:bg-[#E8793A]/30 border border-[#E8793A]/50 text-[#FFA873] hover:text-white font-extrabold text-xs transition-all shadow-sm shadow-[#E8793A]/10"
+            >
+              <span>aicreation2026.blogspot.com</span>
+              <span className="text-[10px]">&rarr;</span>
+            </a>
+            <span className="font-mono text-[10px] text-neutral-500 hidden md:inline">
+              CUR • ICO • ANI
+            </span>
+          </div>
+        </div>
+
+        {/* Security & Legal Links */}
+        <div className="flex flex-wrap items-center justify-center sm:justify-start gap-4 pt-2 border-t border-white/5 text-[11px] text-[#B8ADA3]">
+          <span className="text-neutral-500 font-mono uppercase tracking-wider text-[10px]">Legal & Security:</span>
+          <button
+            onClick={() => {
+              setPolicyModalTab("privacy");
+              setIsPolicyModalOpen(true);
+            }}
+            className="hover:text-[#FFA873] transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <span>🔒 Privacy Policy</span>
+          </button>
+          <span className="text-white/10">•</span>
+          <button
+            onClick={() => {
+              setPolicyModalTab("security");
+              setIsPolicyModalOpen(true);
+            }}
+            className="hover:text-[#FFA873] transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <span>🛡️ Security Architecture</span>
+          </button>
+          <span className="text-white/10">•</span>
+          <button
+            onClick={() => {
+              setPolicyModalTab("disclaimer");
+              setIsPolicyModalOpen(true);
+            }}
+            className="hover:text-[#FFA873] transition-colors cursor-pointer flex items-center gap-1"
+          >
+            <span>⚖️ Disclaimer & Terms</span>
+          </button>
+        </div>
       </footer>
+
+      {/* Policy Modal */}
+      <PolicyModal
+        isOpen={isPolicyModalOpen}
+        onClose={() => setIsPolicyModalOpen(false)}
+        initialTab={policyModalTab}
+      />
 
       {/* Toast Notice */}
       {toastMessage && (
