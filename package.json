@@ -34,10 +34,17 @@
     "@types/node": "^22.14.0",
     "autoprefixer": "^10.4.21",
     "esbuild": "^0.25.0",
-    "sharp": "^0.35.3",
     "tailwindcss": "^4.1.14",
     "tsx": "^4.21.0",
     "typescript": "~5.8.2",
     "vite": "^6.2.3"
+  },
+  "overrides": {
+    "nanoid": ">=3.3.8",
+    "browserslist": ">=4.24.4",
+    "baseline-browser-mapping": ">=2.9.0",
+    "qs": ">=6.14.0",
+    "postcss": ">=8.5.3",
+    "@grpc/grpc-js": ">=1.13.0"
   }
 }
