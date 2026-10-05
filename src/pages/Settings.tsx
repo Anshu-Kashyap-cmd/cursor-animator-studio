@@ -60,6 +60,9 @@ export const Settings: React.FC<SettingsProps> = ({
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="w-px h-6 bg-white/10"></div>
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2A1810] via-[#1C1512] to-[#2E1838] flex items-center justify-center border border-[#E8793A]/40 overflow-hidden shrink-0 shadow-md shadow-[#E8793A]/10">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-0.5" />
+          </div>
           <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-[#B8ADA3] bg-clip-text text-transparent">
             Application Settings
           </h1>

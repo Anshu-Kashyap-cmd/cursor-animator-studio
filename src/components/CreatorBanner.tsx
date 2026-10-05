@@ -23,8 +23,10 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
     return (
       <div className="w-full p-4 rounded-xl bg-gradient-to-r from-[#2A1810]/90 via-[#1C1512] to-[#2E1838]/90 border border-[#E8793A]/40 shadow-lg shadow-[#E8793A]/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-tr from-[#E8793A] to-[#FFB787] flex items-center justify-center text-[#1C1512] shadow-md shadow-[#E8793A]/30 flex-shrink-0">
-            <Crown className="w-5 h-5 fill-current" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#E8793A] to-[#FFB787] p-0.5 shadow-md shadow-[#E8793A]/30 flex-shrink-0 overflow-hidden">
+            <div className="w-full h-full rounded-[10px] bg-[#1C1512] flex items-center justify-center overflow-hidden">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-contain p-1" />
+            </div>
           </div>
           <div>
             <span className="text-[10px] uppercase font-bold tracking-widest text-[#E8793A] block">
@@ -71,12 +73,12 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4 text-center sm:text-left">
             <div className="relative">
               <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-[#E8793A] via-[#FFA873] to-[#FFD1A4] p-1 shadow-xl shadow-[#E8793A]/30 transform group-hover:rotate-3 transition-transform duration-300">
-                <div className="w-full h-full rounded-[14px] bg-[#1C1512] flex flex-col items-center justify-center text-[#E8793A]">
-                  <Crown className="w-7 h-7 sm:w-8 sm:h-8 fill-[#E8793A] text-[#FFA873]" />
+                <div className="w-full h-full rounded-[14px] bg-[#1C1512] flex items-center justify-center p-1.5 overflow-hidden">
+                  <img src="/logo.png" alt="Logo" className="w-full h-full object-contain filter drop-shadow-md" />
                 </div>
               </div>
-              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-black p-1 rounded-full shadow-md animate-bounce">
-                <Sparkles className="w-3.5 h-3.5" />
+              <div className="absolute -top-2 -right-2 bg-gradient-to-r from-amber-400 to-orange-500 text-black p-1.5 rounded-full shadow-md animate-bounce">
+                <Crown className="w-3.5 h-3.5 fill-current" />
               </div>
             </div>
 

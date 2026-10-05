@@ -75,9 +75,9 @@ export const Landing: React.FC<LandingProps> = ({
     <div className="min-h-screen flex flex-col justify-between py-8 px-4 text-[#F3EDE7]">
       {/* Header bar */}
       <header className="max-w-6xl mx-auto w-full flex items-center justify-between mb-8">
-        <div className="flex items-center space-x-2.5">
-          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#E8793A]/20 via-[#1C1512] to-[#6E5A7B]/20 flex items-center justify-center shadow-lg shadow-[#E8793A]/10 border border-[#E8793A]/30 overflow-hidden">
-            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+        <div className="flex items-center space-x-3">
+          <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#2A1810] via-[#1C1512] to-[#2E1838] flex items-center justify-center shadow-lg shadow-[#E8793A]/20 border border-[#E8793A]/40 overflow-hidden shrink-0">
+            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-contain p-1" />
           </div>
           <span className="font-bold text-lg tracking-tight bg-gradient-to-r from-white via-[#F3EDE7] to-[#B8ADA3] bg-clip-text text-transparent">
             Cursor Animator Studio
@@ -104,7 +104,15 @@ export const Landing: React.FC<LandingProps> = ({
 
       {/* Main Area */}
       <main className="max-w-4xl mx-auto w-full flex-1 flex flex-col items-center justify-center my-6 space-y-10">
-        <div className="text-center space-y-3 max-w-xl">
+        <div className="text-center space-y-4 max-w-xl flex flex-col items-center">
+          {/* Official Logo Display */}
+          <div className="relative group mb-1">
+            <div className="absolute -inset-1.5 bg-gradient-to-r from-[#E8793A] via-[#FFA873] to-[#A855F7] rounded-3xl blur-lg opacity-70 group-hover:opacity-100 transition duration-500"></div>
+            <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-gradient-to-b from-[#2A1810] to-[#1C1512] border-2 border-[#E8793A]/60 p-2 shadow-2xl flex items-center justify-center overflow-hidden">
+              <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-contain filter drop-shadow-md" />
+            </div>
+          </div>
+
           <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight bg-gradient-to-b from-white to-[#B8ADA3] bg-clip-text text-transparent">
             Animate Windows Cursors
           </h1>

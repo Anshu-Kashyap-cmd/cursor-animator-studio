@@ -151,8 +151,8 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSelectProject, onN
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="w-px h-6 bg-white/10"></div>
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#E8793A]/20 via-[#1C1512] to-[#6E5A7B]/20 flex items-center justify-center border border-[#E8793A]/30 overflow-hidden">
-            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#2A1810] via-[#1C1512] to-[#2E1838] flex items-center justify-center border border-[#E8793A]/40 overflow-hidden shrink-0 shadow-md shadow-[#E8793A]/10">
+            <img src="/logo.png" alt="Cursor Animator Studio Logo" className="w-full h-full object-contain p-0.5" />
           </div>
           <h1 className="text-xl font-bold tracking-tight bg-gradient-to-r from-white to-[#B8ADA3] bg-clip-text text-transparent">
             My Cursors Dashboard
@@ -160,7 +160,7 @@ export const Dashboard: React.FC<DashboardProps> = ({ user, onSelectProject, onN
         </div>
 
         <div className="text-xs text-[#B8ADA3] font-mono">
-          Logged in as: <span className="text-[#E8793A] font-bold">{user?.email}</span>
+          Workspace: <span className="text-[#E8793A] font-bold">{user?.email || "Local Storage (100% Offline)"}</span>
         </div>
       </header>
 
