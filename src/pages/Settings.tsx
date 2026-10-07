@@ -192,13 +192,13 @@ export const Settings: React.FC<SettingsProps> = ({
               </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-              <span className="font-bold text-[#F3EDE7]">Access Policy:</span>
+              <span className="font-bold text-[#F3EDE7]">Account & Cloud Sync:</span>
               <span className="text-[#E8793A] font-mono font-bold bg-[#E8793A]/10 px-2.5 py-1 rounded border border-[#E8793A]/20">
-                100% Free & Open-Source (No Login Required)
+                Google Authentication Required (Cloud Sync)
               </span>
             </div>
             <p className="text-[11px] text-[#B8ADA3] leading-relaxed pt-1">
-              Your animations, frame assets, custom keyframes, and video extractions are saved directly inside your browser database. No external accounts, passwords, or cloud logins required!
+              Your animations, custom keyframes, and project workspaces are securely linked to your Google Account via Firebase Firestore, with instant local IndexedDB caching for high performance.
             </p>
           </div>
         </GlassPanel>
@@ -308,7 +308,7 @@ export const Settings: React.FC<SettingsProps> = ({
           <div className="h-px bg-white/10 w-full"></div>
 
           <p className="text-xs text-[#B8ADA3] leading-relaxed">
-            Cursor Animator Studio is an open-source, 100% login-free desktop utility. Your media files, frames, and cursor binaries are processed locally in RAM with zero remote tracking or cloud storage.
+            Cursor Animator Studio is an open-source animation workstation. Google Sign-In is required to secure your personal workspace and sync projects. Live Web App: <a href="https://cursor-animator-studio.ai.studio" target="_blank" rel="noopener noreferrer" className="text-[#FFA873] underline font-bold">cursor-animator-studio.ai.studio</a>.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-1">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MousePointer, Images, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles, Video, Film, PlusCircle } from "lucide-react";
+import { MousePointer, Images, LayoutGrid, Settings, FileCode, Trash2, Edit3, FolderHeart, Sparkles, Video, Film, PlusCircle, LogIn, LogOut, User as UserIcon, Globe } from "lucide-react";
 import { UploadZone } from "../components/UploadZone.tsx";
 import { GlassPanel } from "../components/GlassPanel.tsx";
 import { VideoToFramesExtractorModal } from "../components/VideoToFramesExtractorModal.tsx";
@@ -12,6 +12,7 @@ import { loadProjectsFromDb, deleteProjectFromDb } from "../db/projects.ts";
 interface LandingProps {
   user?: any;
   onLogin?: () => void;
+  onLogout?: () => void;
   onSelectProject: (project: ProjectData) => void;
   onCreateProjectFromFrames: (frames: CursorFrame[], name: string, mode: "auto" | "manual") => void;
   onNavigateTo: (page: "landing" | "editor" | "dashboard" | "settings") => void;
@@ -20,6 +21,7 @@ interface LandingProps {
 export const Landing: React.FC<LandingProps> = ({
   user,
   onLogin,
+  onLogout,
   onSelectProject,
   onCreateProjectFromFrames,
   onNavigateTo,
@@ -84,7 +86,18 @@ export const Landing: React.FC<LandingProps> = ({
           </span>
         </div>
 
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2 sm:space-x-3">
+          <a
+            href="https://cursor-animator-studio.ai.studio"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden md:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-300 font-bold text-[11px] border border-emerald-500/30 transition-all"
+            title="Live Production Web App"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>cursor-animator-studio.ai.studio</span>
+          </a>
+
           <button
             onClick={() => onNavigateTo("dashboard")}
             className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white/[0.04] hover:bg-[#6E5A7B]/40 text-xs font-semibold border border-white/5 transition-all cursor-pointer"
@@ -99,6 +112,42 @@ export const Landing: React.FC<LandingProps> = ({
             <Settings className="w-3.5 h-3.5" />
             <span>Settings</span>
           </button>
+
+          {user && !user.uid?.startsWith("guest_") && user.uid !== "local_user" ? (
+            <div className="flex items-center gap-2 pl-1 border-l border-white/10">
+              {user.photoURL ? (
+                <img
+                  src={user.photoURL}
+                  alt={user.displayName || "User"}
+                  className="w-7 h-7 rounded-full border border-[#E8793A]/50 object-cover"
+                />
+              ) : (
+                <div className="w-7 h-7 rounded-full bg-[#E8793A]/20 border border-[#E8793A]/40 flex items-center justify-center text-[#FFA873] text-xs font-bold">
+                  {user.displayName ? user.displayName[0].toUpperCase() : "G"}
+                </div>
+              )}
+              <span className="text-xs font-medium text-white hidden lg:inline max-w-[110px] truncate">
+                {user.displayName || user.email}
+              </span>
+              {onLogout && (
+                <button
+                  onClick={onLogout}
+                  className="p-1.5 rounded-lg bg-white/5 hover:bg-red-500/15 text-[#B8ADA3] hover:text-red-400 transition-colors cursor-pointer"
+                  title="Sign Out"
+                >
+                  <LogOut className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          ) : (
+            <button
+              onClick={onLogin}
+              className="flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-gradient-to-r from-[#E8793A] to-[#FFA873] hover:from-[#F2925C] hover:to-[#FFB787] text-[#1C1512] font-black text-xs transition-all shadow-md shadow-[#E8793A]/20 hover:scale-105 active:scale-95 cursor-pointer ml-1"
+            >
+              <LogIn className="w-3.5 h-3.5" />
+              <span>Google Sign-In</span>
+            </button>
+          )}
         </div>
       </header>
 
@@ -264,11 +313,14 @@ export const Landing: React.FC<LandingProps> = ({
           </div>
         )}
 
-        {/* Open-Source banner notification */}
+        {/* Google Authentication banner notification */}
         <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#E8793A]/10 via-black/40 to-[#6E5A7B]/10 border border-[#E8793A]/25 max-w-xl text-center flex items-center justify-center space-x-2.5 shadow-md">
           <Sparkles className="w-4.5 h-4.5 text-[#E8793A] animate-pulse flex-shrink-0" />
           <p className="text-xs text-[#D6CAC0]">
-            <strong className="text-white font-bold">100% Free & Open-Source:</strong> No login or account required! All features and projects auto-save locally to your browser.
+            <strong className="text-white font-bold">Google Login Required:</strong> Sign in with your Google account to create, animate, and sync projects across devices. Live at{" "}
+            <a href="https://cursor-animator-studio.ai.studio" target="_blank" rel="noopener noreferrer" className="text-[#FFA873] underline font-bold">
+              cursor-animator-studio.ai.studio
+            </a>.
           </p>
         </div>
       </main>

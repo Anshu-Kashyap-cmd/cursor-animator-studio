@@ -5,20 +5,16 @@ import { Landing } from "./pages/Landing.tsx";
 import { Editor } from "./pages/Editor.tsx";
 import { Dashboard } from "./pages/Dashboard.tsx";
 import { Settings } from "./pages/Settings.tsx";
+import { AuthModal } from "./components/AuthModal.tsx";
+import { auth, signInWithGoogle, signOut } from "./db/firebase.ts";
+import { onAuthStateChanged } from "firebase/auth";
 import { AlertCircle, Settings as SettingsIcon, X, Key } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
-// Default local user for seamless, offline-first experience without requiring any login
-const DEFAULT_LOCAL_USER = {
-  uid: "local_user",
-  displayName: "Local Creator",
-  email: "local@cursorstudio.workspace",
-  photoURL: null,
-};
-
 export default function App() {
   const [currentPage, setCurrentPage] = useState<"landing" | "editor" | "dashboard" | "settings">("landing");
-  const [user] = useState<any>(DEFAULT_LOCAL_USER);
+  const [user, setUser] = useState<any>(() => auth.currentUser);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
 
   // Global settings
   const [accentColor, setAccentColor] = useState<string>("#E8793A");
@@ -26,6 +22,14 @@ export default function App() {
   const [defaultFrameCount, setDefaultFrameCount] = useState<number>(18);
 
   const [activeProject, setActiveProject] = useState<ProjectData | null>(null);
+
+  // Listen to Firebase Auth state changes
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   // Global API Key error notification state
   const [globalApiError, setGlobalApiError] = useState<{ message: string; isWarning?: boolean } | null>(null);
@@ -55,12 +59,57 @@ export default function App() {
     document.documentElement.style.setProperty("--accent-orange-hover", hoverColor);
   }, [accentColor]);
 
+  const handleGoogleSignIn = async () => {
+    try {
+      const loggedUser = await signInWithGoogle();
+      setUser(loggedUser);
+      setIsAuthModalOpen(false);
+    } catch (err) {
+      console.error("Google sign in error:", err);
+      throw err;
+    }
+  };
+
+  const handleGuestSignIn = (name: string) => {
+    const guestUser = {
+      uid: `guest_${Date.now()}`,
+      displayName: name,
+      email: `${name.toLowerCase().replace(/\s+/g, "")}@guest.local`,
+      photoURL: null,
+    };
+    setUser(guestUser);
+    setIsAuthModalOpen(false);
+  };
+
+  const handleSignOut = async () => {
+    try {
+      if (user?.uid && !user.uid.startsWith("guest_") && user.uid !== "local_user") {
+        await signOut();
+      }
+    } catch (err) {
+      console.error("Sign out error:", err);
+    } finally {
+      setUser(null);
+      setActiveProject(null);
+      setCurrentPage("landing");
+    }
+  };
+
   const handleSelectProject = (project: ProjectData) => {
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
     setActiveProject(project);
     setCurrentPage("editor");
   };
 
   const handleCreateProjectFromFrames = (frames: CursorFrame[], name: string, mode: "auto" | "manual") => {
+    if (!user) {
+      setIsAuthModalOpen(true);
+      return;
+    }
+
     const projectFrames: ProjectFrame[] = frames.map((f, idx) => ({
       frame_index: idx,
       duration_ms: f.durationMs,
@@ -73,7 +122,7 @@ export default function App() {
 
     const newProject: ProjectData = {
       id: Math.random().toString(36).substring(2, 9),
-      user_id: user?.uid || "local_user",
+      user_id: user?.uid || "google_user",
       name: name || "Untitled Cursor",
       mode: mode,
       frame_count: projectFrames.length,
@@ -96,10 +145,17 @@ export default function App() {
       {currentPage === "landing" && (
         <Landing
           user={user}
-          onLogin={() => {}}
+          onLogin={() => setIsAuthModalOpen(true)}
+          onLogout={handleSignOut}
           onSelectProject={handleSelectProject}
           onCreateProjectFromFrames={handleCreateProjectFromFrames}
-          onNavigateTo={setCurrentPage}
+          onNavigateTo={(page) => {
+            if (page === "dashboard" && !user) {
+              setIsAuthModalOpen(true);
+              return;
+            }
+            setCurrentPage(page);
+          }}
         />
       )}
 
@@ -132,10 +188,16 @@ export default function App() {
           setDefaultDurationMs={setDefaultDurationMs}
           defaultFrameCount={defaultFrameCount}
           setDefaultFrameCount={setDefaultFrameCount}
-          onLogout={() => {
-            setCurrentPage("landing");
-            setActiveProject(null);
-          }}
+          onLogout={handleSignOut}
+        />
+      )}
+
+      {/* Auth Modal for Google Sign In */}
+      {isAuthModalOpen && (
+        <AuthModal
+          onClose={() => setIsAuthModalOpen(false)}
+          onGoogleSignIn={handleGoogleSignIn}
+          onGuestSignIn={handleGuestSignIn}
         />
       )}
 

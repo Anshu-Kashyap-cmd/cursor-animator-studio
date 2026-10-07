@@ -1,10 +1,11 @@
 # 🖱️ Cursor Animator Studio (.CUR / .ANI Creator & Video Processor)
 
+[![Live Web App](https://img.shields.io/badge/Live%20Web%20App-cursor--animator--studio.ai.studio-success?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cursor-animator-studio.ai.studio)
 [![Creator](https://img.shields.io/badge/Created%20By-Anshu%20Kashyap-FFA873?style=for-the-badge&logo=codeforces&logoColor=white)](https://aicreation2026.blogspot.com)
 [![Website](https://img.shields.io/badge/Official%20Hub-aicreation2026.blogspot.com-E8793A?style=for-the-badge&logo=blogger&logoColor=white)](https://aicreation2026.blogspot.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
 [![Security Policy](https://img.shields.io/badge/Security-Policy-7FBF8E.svg?style=for-the-badge&logo=shield)](./SECURITY.md)
-[![Privacy Guarantee](https://img.shields.io/badge/Privacy-100%25%20Local-blue.svg?style=for-the-badge&logo=securityscorecard)](./PRIVACY_POLICY.md)
+[![Privacy & Auth](https://img.shields.io/badge/Auth-Google%20Sign--In-blue.svg?style=for-the-badge&logo=google)](./PRIVACY_POLICY.md)
 
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg?logo=typescript)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19-61DAFB.svg?logo=react)](https://react.dev/)
@@ -14,12 +15,15 @@
 
 ---
 
+### 🚀 **Live Web Application:** **[https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)**
 ### 👑 **Author & Creator:** **[Anshu Kashyap](https://aicreation2026.blogspot.com)**
 ### 🌐 **Official Website:** **[https://aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**
 
 ---
 
-> **Cursor Animator Studio** is an all-in-one, professional web workstation created by **Anshu Kashyap** for designing, animating, converting, and exporting high-fidelity Windows Animated Cursors (`.ani`), Static Cursors (`.cur`), Animated GIFs, and Spritesheets. Featuring client-side hardware-accelerated **Video-to-Frames Extraction**, custom visual effects, timeline tweening, chroma key background removal, and Firebase cloud project synchronization. Official tools & updates available at **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
+> **Cursor Animator Studio** is an all-in-one, professional web workstation created by **Anshu Kashyap** for designing, animating, converting, and exporting high-fidelity Windows Animated Cursors (`.ani`), Static Cursors (`.cur`), Animated GIFs, and Spritesheets. Featuring client-side hardware-accelerated **Video-to-Frames Extraction**, custom visual effects, timeline tweening, chroma key background removal, and Google Firebase cloud project synchronization.
+>
+> 🌐 **Try it Live Online:** Run the application directly in your browser at **[https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)** (Google Login Required for workspace & project storage). Official portal & updates: **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
 
 ---
 
@@ -87,10 +91,10 @@ Export your creations in multiple industry-standard formats:
 
 ---
 
-### 6. ⚡ 100% Login-Free & Offline-First Workspace
-- **Zero Login Friction**: No accounts, passwords, or authentication required. Anyone cloning the repository can run and use all features instantly.
-- **Offline-First Persistence**: Powered by browser IndexedDB (`idb-keyval`). Projects, custom keyframes, video extractions, and timeline settings auto-save locally with zero data loss.
-- **Privacy & Security**: All image and video processing runs 100% client-side inside the user's browser. No private files or frames are transmitted to external servers.
+### 6. 🔐 Google Authentication & Cloud Synchronization
+- **Google Sign-In Required**: To access the studio workstation, edit custom frames, create animations, and save projects, users authenticate securely using Google Sign-In (powered by Google Firebase Authentication).
+- **Cloud Project Sync & Storage**: All projects are automatically synchronized with Google Firestore under the user's authenticated account, enabling users to access and edit their cursor library from any browser or device seamlessly.
+- **Privacy & Security**: Authentication tokens and account sessions are handled directly by Google's secure OAuth flow. Media processing and video extraction remain client-side in RAM.
 
 ---
 
@@ -227,10 +231,12 @@ Export your creations in multiple industry-standard formats:
 | Attribute | Details |
 |---|---|
 | **Author / Creator** | **Anshu Kashyap** |
+| **Live Web Application** | **[https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)** (Google Login Required) |
 | **Official Website & Portal** | **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)** |
-| **Direct URL** | `https://aicreation2026.blogspot.com` |
+| **Direct Portal URL** | `https://aicreation2026.blogspot.com` |
 | **Specialization** | AI Tools, Digital Studios, Software Design & Graphic Utilities |
 
+> **🚀 Try Online**: Access the full live web application directly at **[https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)**. Sign in with your Google account to create, animate, and sync your cursors.  
 > **Connect & Explore**: For exclusive software releases, custom cursor packs, animated templates, and technical tutorials, visit the official portal at **[https://aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
 
 ---

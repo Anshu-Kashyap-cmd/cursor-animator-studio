@@ -35,7 +35,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   };
 
   const isDev = isDeveloper(user);
-  const isLoggedInRealUser = user !== null && !user.uid.startsWith("guest_");
+  const isLoggedInRealUser = user !== null && !user.uid.startsWith("guest_") && user.uid !== "local_user";
   const isRestricted = !isDev && !isLoggedInRealUser;
 
   const handleDrag = (e: React.DragEvent) => {
@@ -159,7 +159,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     setIsDragActive(false);
 
     if (isRestricted) {
-      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onError("🔒 Google Sign-In Required: Please sign in with your Google Account to create, upload, and save animated cursors!");
       onLogin();
       return;
     }
@@ -172,7 +172,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
     if (isRestricted) {
-      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onError("🔒 Google Sign-In Required: Please sign in with your Google Account to create, upload, and save animated cursors!");
       onLogin();
       return;
     }
@@ -185,7 +185,7 @@ export const UploadZone: React.FC<UploadZoneProps> = ({
     if (isRestricted) {
       e.preventDefault();
       e.stopPropagation();
-      onError("🔒 Custom image uploads are restricted to logged-in accounts. Please sign in with Google or Email to create your custom animated cursors!");
+      onError("🔒 Google Sign-In Required: Please sign in with your Google Account to create, upload, and save animated cursors!");
       onLogin();
       return;
     }

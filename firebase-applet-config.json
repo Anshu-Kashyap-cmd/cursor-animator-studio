@@ -7,5 +7,6 @@
   "storageBucket": "disco-venture-17c1c.firebasestorage.app",
   "messagingSenderId": "142603194325",
   "measurementId": "",
-  "oAuthClientId": "142603194325-dp7m5fisa5npejghhhrh0ugr6ab1dr4s.apps.googleusercontent.com"
+  "oAuthClientId": "142603194325-dp7m5fisa5npejghhhrh0ugr6ab1dr4s.apps.googleusercontent.com",
+  "recaptchaSiteKey": ""
 }

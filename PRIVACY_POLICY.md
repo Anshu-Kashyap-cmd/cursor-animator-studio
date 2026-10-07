@@ -3,22 +3,29 @@
 **Effective Date:** October 2026  
 **Last Updated:** October 2026  
 **Project:** Cursor Animator Studio  
+**Live Web Application:** [https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)  
 **Author / Creator:** Anshu Kashyap  
-**Official Portal:** [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)
+**Official Portal:** [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)  
 
 ---
 
 ## 🔒 Summary: Privacy by Design
 
-Cursor Animator Studio is an open-source, client-side web application and Windows cursor creation utility. We strictly believe in complete digital privacy. **We do not collect, store, sell, track, or transmit your personal data.**
+Cursor Animator Studio is an open-source, client-side web application and Windows cursor creation workstation. We strictly believe in complete digital privacy. **We do not sell, rent, or monetize your personal data.**
 
 ---
 
-## 1. Information We Do NOT Collect
-- **No Personal Identifiable Information (PII)**: We do not ask for or collect names, email addresses, phone numbers, or physical addresses.
-- **No Account or Authentication Data**: The studio operates 100% login-free. There are no registration forms, passwords, or authentication cookies.
-- **No Upload Tracking or Cloud Scrapers**: Any files you drop into the studio (such as MP4, WebM videos, PNG/JPEG frames, `.cur` or `.ani` cursors) stay **100% inside your local device's memory**. They are NEVER transmitted to external servers or cloud storage.
-- **No Spyware, Ad Networks, or Fingerprinting**: We do not include third-party tracking pixels, ad networks, behavioral tracking, or browser fingerprinting scripts.
+## 1. Information Handled & Authentication
+
+- **Google Account Authentication (Required)**: 
+  To provide persistent project storage, cloud synchronization across devices, and secure workspace access, users sign in with their Google account via Firebase Authentication.
+  - Information received from Google: Your Google User ID (`uid`), display name, and email address.
+  - How it is used: Strictly to associate your animated cursor projects and presets with your account in Google Firestore.
+  - We do NOT have access to your Google password or any private Google files.
+- **Zero Media Cloud Uploads**: 
+  Any media you drop into the studio (such as MP4/WebM videos, PNG/JPEG frames, or `.cur`/`.ani` cursors) is processed **100% inside your local device's memory**. Video frames and animations are converted locally in RAM.
+- **No Third-Party Spyware or Ad Trackers**: 
+  We do not sell data to advertisers, use third-party ad networks, or perform behavioral fingerprinting.
 
 ---
 

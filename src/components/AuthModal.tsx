@@ -65,7 +65,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
     try {
       await onGoogleSignIn();
     } catch (err: any) {
-      setError("Google Sign-In failed due to frame/popup restrictions.");
+      setError("Google Sign-In popup was blocked or closed. Please open the live web app directly at https://cursor-animator-studio.ai.studio in a full browser tab to complete Google Sign-In.");
     } finally {
       setLoading(false);
     }
@@ -213,8 +213,21 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 <p>
                   Sign in with your Google account to automatically synchronize your active designs, export histories, and configurations securely to our persistent database.
                 </p>
-                <div className="p-3 rounded-xl bg-[#E8793A]/5 border border-[#E8793A]/10 text-[11px] text-[#E8793A]/90">
-                  ⚠️ <strong>Iframe Warning:</strong> Google popups may get blocked by browser policies inside nesting preview frames. If it fails, please open the app in a <strong>New Tab</strong> first!
+                <div className="p-3 rounded-xl bg-[#E8793A]/5 border border-[#E8793A]/10 text-[11px] text-[#E8793A]/90 space-y-1.5">
+                  <p>
+                    🌐 <strong>Live Web App:</strong>{" "}
+                    <a
+                      href="https://cursor-animator-studio.ai.studio"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="underline font-bold text-white hover:text-[#FFA873]"
+                    >
+                      cursor-animator-studio.ai.studio
+                    </a>
+                  </p>
+                  <p className="text-[10px] text-[#B8ADA3]">
+                    Google popups require a top-level browser window. If you are viewing inside an embedded preview frame, please open the live link above to sign in with Google seamlessly.
+                  </p>
                 </div>
               </div>
 

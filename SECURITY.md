@@ -4,22 +4,24 @@
 **Cursor Animator Studio** is committed to upholding the highest standards of software security, privacy, and integrity. As a client-first, open-source tool, we prioritize user security by design, strictly eliminating remote vulnerabilities and unnecessary data exfiltration.
 
 Project Maintainer & Lead Developer: **Anshu Kashyap**  
-Official Website & Portal: [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)
+Live Web Application: [https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)  
+Official Website & Portal: [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)  
 
 ---
 
 ## 🔒 Security Architecture Highlights
 
-1. **100% Client-Side In-Memory Execution**:
+1. **100% Client-Side In-Memory Media Execution**:
    - All image processing, video-to-frame extraction, chroma key calculations, color quantization, and `.ANI` / `.CUR` binary compilation run strictly within your browser's local sandbox memory (`OffscreenCanvas`, `HTML5 Canvas`, and Web Workers).
-   - No uploaded images, video files, or cursor assets are ever uploaded to any third-party remote server.
+   - Video files and raw cursor assets are never uploaded to any third-party remote processing server.
 
-2. **No User Credentials or Plaintext Tokens**:
-   - The application functions entirely login-free and unauthenticated.
-   - We do not store passwords, session tokens, or API keys in the client or browser storage.
+2. **Secure Google Authentication (Firebase Auth)**:
+   - Users authenticate securely using Google Sign-In (OAuth 2.0).
+   - Authentication tokens, session lifetimes, and account verification are managed by Google Identity Services and Firebase Auth SDK.
+   - We never request, process, or store user passwords. Firestore database security rules enforce user-level data isolation, ensuring users only read and write their own cursor projects.
 
-3. **Isolated Local Storage (IndexedDB Sandboxing)**:
-   - User projects, timeline configurations, and export histories are persisted strictly inside the user's browser using origin-isolated `IndexedDB`.
+3. **Isolated Local & Cloud Storage**:
+   - In addition to real-time Google Firestore synchronization, user projects and export histories are cached locally using origin-isolated browser `IndexedDB`.
    - Data stored in this manner is private to your local browser profile and inaccessible to other domains or external applications.
 
 4. **Binary & File Buffer Sanitization**:
@@ -31,7 +33,7 @@ Official Website & Portal: [aicreation2026.blogspot.com](https://aicreation2026.
 
 | Version | Supported | Security Notes |
 | :--- | :---: | :--- |
-| `1.0.x` (Current) | ✅ Yes | Fully patched, login-free client-side architecture. |
+| `1.0.x` (Current) | ✅ Yes | Fully patched, Google Auth secured client-side architecture. |
 | `< 1.0.0` | ❌ No | Deprecated development builds. Please upgrade to latest. |
 
 ---

@@ -9,12 +9,14 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
   const [copied, setCopied] = useState(false);
   const portalUrl = "https://aicreation2026.blogspot.com";
   const displayUrl = "aicreation2026.blogspot.com";
+  const liveAppUrl = "https://cursor-animator-studio.ai.studio";
+  const displayLiveApp = "cursor-animator-studio.ai.studio";
   const creatorName = "Anshu Kashyap";
 
   const handleCopy = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    navigator.clipboard.writeText(portalUrl);
+    navigator.clipboard.writeText(liveAppUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2500);
   };
@@ -38,16 +40,29 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
           </div>
         </div>
 
-        <a
-          href={portalUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#E8793A] hover:bg-[#F2925C] text-[#1C1512] font-black text-xs tracking-wider shadow-md shadow-[#E8793A]/20 transition-all hover:scale-105 active:scale-95 cursor-pointer"
-        >
-          <Globe className="w-3.5 h-3.5" />
-          <span>{displayUrl}</span>
-          <ExternalLink className="w-3.5 h-3.5" />
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href={liveAppUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300 font-bold text-xs transition-all cursor-pointer"
+            title="Live Web Application"
+          >
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Live Web App</span>
+            <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href={portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-[#E8793A] hover:bg-[#F2925C] text-[#1C1512] font-black text-xs tracking-wider shadow-md shadow-[#E8793A]/20 transition-all cursor-pointer"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span>{displayUrl}</span>
+            <ExternalLink className="w-3.5 h-3.5" />
+          </a>
+        </div>
       </div>
     );
   }
@@ -102,13 +117,25 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
 
           {/* Right section: Website Button & Copy Feature */}
           <div className="flex flex-col sm:flex-row items-center gap-3 w-full lg:w-auto">
+            {/* Live Web App Button */}
+            <a
+              href={liveAppUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 py-4 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 border-2 border-emerald-500/50 text-white font-extrabold text-sm tracking-wide shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+            >
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>Live App: {displayLiveApp}</span>
+              <ExternalLink className="w-4 h-4 text-emerald-300" />
+            </a>
+
             <a
               href={portalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-4 rounded-xl bg-gradient-to-r from-[#E8793A] via-[#F2925C] to-[#FFA873] text-[#1C1512] font-black text-sm sm:text-base tracking-wide shadow-xl shadow-[#E8793A]/40 hover:shadow-[#E8793A]/70 hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer border-2 border-white/30 whitespace-nowrap"
+              className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-5 py-4 rounded-xl bg-gradient-to-r from-[#E8793A] via-[#F2925C] to-[#FFA873] text-[#1C1512] font-black text-sm tracking-wide shadow-xl shadow-[#E8793A]/40 hover:shadow-[#E8793A]/70 hover:scale-[1.03] active:scale-[0.98] transition-all cursor-pointer border-2 border-white/30 whitespace-nowrap"
             >
-              <Globe className="w-5 h-5 text-[#1C1512]" />
+              <Globe className="w-4.5 h-4.5 text-[#1C1512]" />
               <span className="font-black tracking-wider">{displayUrl}</span>
               <ExternalLink className="w-4 h-4 text-[#1C1512]" />
             </a>
@@ -116,17 +143,17 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
             <button
               onClick={handleCopy}
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-4 rounded-xl bg-white/10 hover:bg-white/15 text-white font-bold text-xs border border-white/15 hover:border-[#E8793A]/50 transition-all cursor-pointer shadow-md"
-              title="Copy URL"
+              title="Copy Live App URL"
             >
               {copied ? (
                 <>
                   <Check className="w-4 h-4 text-[#7FBF8E]" />
-                  <span className="text-[#7FBF8E]">Copied!</span>
+                  <span className="text-[#7FBF8E]">Copied URL!</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-4 h-4 text-[#B8ADA3]" />
-                  <span>Copy</span>
+                  <span>Copy App Link</span>
                 </>
               )}
             </button>
@@ -137,9 +164,9 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
         <div className="mt-5 pt-4 border-t border-white/10 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#B8ADA3] gap-2">
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[#7FBF8E] animate-ping" />
-            <span className="font-semibold text-[#F3EDE7]">Official Portal Online</span>
+            <span className="font-semibold text-[#F3EDE7]">Live App: https://cursor-animator-studio.ai.studio</span>
             <span>•</span>
-            <span>Free Cursors, AI Tools & Guides</span>
+            <span>Google Login Required for Cloud Sync</span>
           </div>
 
           <a 
@@ -148,7 +175,7 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
             rel="noopener noreferrer" 
             className="hover:text-[#FFA873] font-bold underline transition-colors"
           >
-            Visit {displayUrl} &rarr;
+            Official Hub: {displayUrl} &rarr;
           </a>
         </div>
       </div>

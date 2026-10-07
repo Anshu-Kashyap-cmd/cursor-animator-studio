@@ -2,8 +2,9 @@
 
 **Effective Date:** October 2026  
 **Project:** Cursor Animator Studio  
+**Live Web Application:** [https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)  
 **Author / Creator:** Anshu Kashyap  
-**Official Portal:** [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)
+**Official Portal:** [aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)  
 
 ---
 

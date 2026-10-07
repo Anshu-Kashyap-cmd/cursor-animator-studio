@@ -114,31 +114,31 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#7FBF8E]/15 to-[#E8793A]/10 border border-[#7FBF8E]/30 text-[#F3EDE7]">
                 <p className="font-bold flex items-center gap-1.5 text-sm text-[#7FBF8E]">
-                  <ShieldCheck className="w-4 h-4" /> 100% Privacy by Design Guarantee
+                  <ShieldCheck className="w-4 h-4" /> Privacy & Secure Authentication Guarantee
                 </p>
                 <p className="text-xs text-[#D6CAC0] mt-1">
-                  Cursor Animator Studio is an open-source, login-free tool. We do not track, collect, store, or sell any personal data, period.
+                  Cursor Animator Studio (<a href="https://cursor-animator-studio.ai.studio" target="_blank" rel="noopener noreferrer" className="text-[#FFA873] underline font-bold">cursor-animator-studio.ai.studio</a>) uses Google Authentication to securely preserve your animated cursor projects. We never sell, track, or share your personal data.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">1. Zero Cloud Uploads & Local In-Memory Processing</h4>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">1. Zero Media Cloud Uploads & Local RAM Processing</h4>
                 <p>
-                  Every image, video file, canvas drawing, and .ani/.cur export remains strictly inside your local device’s RAM. No files or media are ever transmitted to any remote servers or cloud processing engines.
+                  Every image, video file, canvas drawing, and .ani/.cur export remains strictly inside your local device’s RAM. Video decoding, frame splitting, and binary packaging execute on your machine with zero server-side exposure.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">2. No Personal Identifiable Information (PII)</h4>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">2. Google Account Authentication (Required)</h4>
                 <p>
-                  We do not ask for, gather, or store names, email addresses, payment information, or account credentials. There is no sign-in or login barrier required.
+                  To secure your workspace, prevent unauthorized access to your creations, and sync projects across sessions and devices, users sign in with their Google Account. We store only your basic profile identifier (UID, email, display name) strictly to namespace your projects in Firestore.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">3. Private Browser Sandboxing (IndexedDB)</h4>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">3. Cloud & Local Workspace Synchronization</h4>
                 <p>
-                  Your created projects and export histories are saved inside your own browser using standard origin-isolated IndexedDB. You can clear this storage at any time via your browser settings or the Settings page.
+                  Your projects are stored securely in Google Firestore under your account and cached locally using browser IndexedDB. You can delete individual projects or wipe your workspace at any time.
                 </p>
               </div>
 
@@ -156,24 +156,31 @@ export const PolicyModal: React.FC<PolicyModalProps> = ({
             <div className="space-y-4">
               <div className="p-3.5 rounded-xl bg-gradient-to-r from-[#E8793A]/15 to-[#6E5A7B]/15 border border-[#E8793A]/30 text-[#F3EDE7]">
                 <p className="font-bold flex items-center gap-1.5 text-sm text-[#FFA873]">
-                  <Lock className="w-4 h-4" /> Client-Side Security Architecture
+                  <Lock className="w-4 h-4" /> Multi-Layer Security Architecture
                 </p>
                 <p className="text-xs text-[#D6CAC0] mt-1">
-                  Built with robust client-side sandboxing, input bounds verification, and RIFF/ACON binary chunk sanitization to safeguard your browser environment.
+                  Secured with Google OAuth 2.0 authentication, Firestore document rules, client-side sandboxing, and binary chunk sanitization. Live at <span className="font-mono text-[#FFA873]">cursor-animator-studio.ai.studio</span>.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">1. Binary & Buffer Overflow Protection</h4>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">1. Google OAuth 2.0 Authentication</h4>
+                <p>
+                  Authentication is managed by Google Identity Services and Firebase Auth SDK. Users never pass passwords to this application, protecting accounts against credential interception.
+                </p>
+              </div>
+
+              <div>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">2. Binary & Buffer Overflow Protection</h4>
                 <p>
                   Our custom parser rigorously validates byte headers, chunk offsets, and frame resolution bounds before parsing or synthesizing `.ani`, `.cur`, and `.ico` containers.
                 </p>
               </div>
 
               <div>
-                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">2. Zero Server Vulnerabilities</h4>
+                <h4 className="font-bold text-[#F3EDE7] text-sm mb-1">3. Firestore Security Rules & Access Control</h4>
                 <p>
-                  Because Cursor Animator Studio executes client-side with no remote user database, common web risks like SQL injection, credential leaks, and session hijacking are eliminated by architecture.
+                  Database operations require a verified authenticated session. Every user can only read and write projects tied strictly to their own authenticated Google UID.
                 </p>
               </div>
 
