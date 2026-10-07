@@ -1,0 +1,13 @@
+# GitHub Sponsors & Funding Configuration
+# This file enables the official "Sponsor this project" heart button on your GitHub repository.
+
+# Official website and custom donation / sponsorship link
+custom:
+  - 'https://aicreation2026.blogspot.com'
+  - 'https://cursor-animator-studio.ai.studio'
+
+# You can also add your username to any of these platforms:
+# github: [YourGitHubUsername]
+# ko_fi: [YourKofiUsername]
+# buy_me_a_coffee: [YourBuyMeACoffeeUsername]
+# patreon: [YourPatreonUsername]

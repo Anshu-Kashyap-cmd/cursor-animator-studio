@@ -1,6 +1,7 @@
 # 🖱️ Cursor Animator Studio (.CUR / .ANI Creator & Video Processor)
 
 [![Live Web App](https://img.shields.io/badge/Live%20Web%20App-cursor--animator--studio.ai.studio-success?style=for-the-badge&logo=googlechrome&logoColor=white)](https://cursor-animator-studio.ai.studio)
+[![Sponsor](https://img.shields.io/badge/Sponsor-Support%20Project-FF69B4?style=for-the-badge&logo=githubsponsors&logoColor=white)](https://aicreation2026.blogspot.com)
 [![Creator](https://img.shields.io/badge/Created%20By-Anshu%20Kashyap-FFA873?style=for-the-badge&logo=codeforces&logoColor=white)](https://aicreation2026.blogspot.com)
 [![Website](https://img.shields.io/badge/Official%20Hub-aicreation2026.blogspot.com-E8793A?style=for-the-badge&logo=blogger&logoColor=white)](https://aicreation2026.blogspot.com)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg?style=for-the-badge)](./LICENSE)
@@ -238,6 +239,17 @@ Export your creations in multiple industry-standard formats:
 
 > **🚀 Try Online**: Access the full live web application directly at **[https://cursor-animator-studio.ai.studio](https://cursor-animator-studio.ai.studio)**. Sign in with your Google account to create, animate, and sync your cursors.  
 > **Connect & Explore**: For exclusive software releases, custom cursor packs, animated templates, and technical tutorials, visit the official portal at **[https://aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)**.
+
+---
+
+## 💖 Sponsor & Support the Project
+
+If you find **Cursor Animator Studio** useful for your projects, animations, or Windows customization, please consider supporting development! Your sponsorship helps fund new features, server hosting, and upcoming AI cursor tools.
+
+- ⭐ **Star the Repository**: Click the **Star** button at the top right to boost discoverability on GitHub!
+- 🔀 **Fork & Contribute**: Help improve features, report bugs, or submit custom cursor presets.
+- 💖 **Sponsor on GitHub**: Click the **"Sponsor"** button on this repository.
+- ☕ **Support on Official Portal**: Visit **[aicreation2026.blogspot.com](https://aicreation2026.blogspot.com)** for sponsorship options and direct creator support.
 
 ---
 

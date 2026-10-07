@@ -40,7 +40,7 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 flex-wrap sm:flex-nowrap">
           <a
             href={liveAppUrl}
             target="_blank"
@@ -51,6 +51,16 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
             <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span>Live Web App</span>
             <ExternalLink className="w-3 h-3" />
+          </a>
+          <a
+            href={portalUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-pink-500/15 hover:bg-pink-500/25 border border-pink-500/40 text-pink-300 font-bold text-xs transition-all cursor-pointer"
+            title="Sponsor & Support"
+          >
+            <Heart className="w-3 h-3 fill-current text-pink-400" />
+            <span>Sponsor</span>
           </a>
           <a
             href={portalUrl}
@@ -127,6 +137,18 @@ export const CreatorBanner: React.FC<CreatorBannerProps> = ({ variant = "full" }
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
               <span>Live App: {displayLiveApp}</span>
               <ExternalLink className="w-4 h-4 text-emerald-300" />
+            </a>
+
+            {/* Sponsor Project Button */}
+            <a
+              href={portalUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-4 rounded-xl bg-pink-500/15 hover:bg-pink-500/25 border-2 border-pink-500/40 text-pink-300 font-bold text-xs tracking-wide shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all cursor-pointer whitespace-nowrap"
+              title="Sponsor & Support Anshu Kashyap"
+            >
+              <Heart className="w-4 h-4 fill-current text-pink-400" />
+              <span>Sponsor</span>
             </a>
 
             <a
